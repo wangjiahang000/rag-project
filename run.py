@@ -23,7 +23,7 @@ if __name__=="__main__":
     print("="*50)
     print("系统已启动！")
     print("前端地址：http://localhost:7860")
-    print("后端地址：hhtp://localhost:8000")
+    print("后端地址：http://localhost:8000")
     print("按Ctrl+C 停止服务")
     print("="*50)
 
