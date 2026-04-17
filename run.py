@@ -28,11 +28,12 @@ if __name__=="__main__":
     print("="*50)
 
 
-try:
-    backend.wait()
-    frontend.wait()
-except KeyboardInterrupt:
-    print("\n正在停止服务...")
-    backend.terminate()
-    frontend.terminate()
-    print("服务已终止")
+    try:
+        backend.wait()
+        frontend.wait()
+    except KeyboardInterrupt:
+        print("\n正在停止服务...")
+        backend.terminate()
+        frontend.terminate()
+        time.sleep(0.5)
+        print("服务已终止")
