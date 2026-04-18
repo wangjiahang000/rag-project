@@ -67,13 +67,18 @@ def search_papers(query, max_results):
             result = response.json()
             papers = result.get("papers", [])
             if papers:
-                # 创建选项列表（显示标题、作者、年份）
+                # 创建选项列表（显示中文标题）
                 choices = []
                 for p in papers:
-                    authors_str = ', '.join(p['authors'][:2])
-                    if len(p['authors']) > 2:
-                        authors_str += ' et al.'
-                    choices.append(f"{p['title']} ({p['published']}) - {authors_str}")
+                    # 使用翻译后的中文标题
+                    title_display = p.get('title', p.get('title_en', '未知标题'))
+                    # 限制长度
+                    if len(title_display) > 80:
+                        title_display = title_display[:77] + "..."
+                    
+                    authors_str = p.get('authors_display', ', '.join(p.get('authors', [])[:2]))
+                    choices.append(f"{title_display} ({p['published']}) - {authors_str}")
+                
                 return f"✅ 找到 {len(papers)} 篇论文", gr.update(choices=choices), papers
             else:
                 return "❌ 未找到相关论文", gr.update(choices=[]), []
@@ -83,6 +88,38 @@ def search_papers(query, max_results):
         return f"❌ 连接失败: {str(e)}", gr.update(choices=[]), []
 
 
+def add_paper_to_kb(selected_paper, papers_list):
+    """添加论文到知识库"""
+    if not selected_paper or not papers_list:
+        return "请先选择一篇论文"
+    
+    # 找到选中的论文
+    for paper in papers_list:
+        # 构建匹配字符串
+        title_display = paper.get('title', paper.get('title_en', '未知标题'))
+        if len(title_display) > 80:
+            title_display = title_display[:77] + "..."
+        authors_str = paper.get('authors_display', ', '.join(paper.get('authors', [])[:2]))
+        display_text = f"{title_display} ({paper['published']}) - {authors_str}"
+        
+        if display_text == selected_paper:
+            try:
+                response = requests.post(
+                    "http://localhost:8000/add_paper_to_kb",
+                    json={"paper_id": paper['id'], "paper_title": paper.get('title', paper.get('title_en', '未知'))}
+                )
+                if response.status_code == 200:
+                    result = response.json()
+                    if result.get("status") == "success":
+                        return f"✅ {result.get('message', '添加成功')}，共 {result.get('chunks', 0)} 个文本块"
+                    else:
+                        return f"❌ 添加失败：{result.get('message', '未知错误')}"
+                else:
+                    return f"❌ 添加失败：HTTP {response.status_code}"
+            except Exception as e:
+                return f"❌ 连接失败: {str(e)}"
+    
+    return "❌ 未找到选中的论文"
 def add_paper_to_kb(selected_paper, papers_list):
     """添加论文到知识库"""
     if not selected_paper or not papers_list:

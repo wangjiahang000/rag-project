@@ -47,7 +47,7 @@ def tokenize_chinese(text):
 def build_bm25_index(documents):
     """构建BM25索引"""
     print(f"📝 正在构建BM25索引，共 {len(documents)} 个文档...")
-    
+    print(f"文档1分词示例: {tokenized_docs[0][:20]}") 
     # 对所有文档内容进行分词
     tokenized_docs = [tokenize_chinese(doc.page_content) for doc in documents]
     

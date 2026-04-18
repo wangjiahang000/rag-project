@@ -14,6 +14,8 @@ chroma_db/
 # 临时文件
 *.tmp
 temp/
+papers/
+uploads/
 
 # IDE
 .vscode/
@@ -25,3 +27,4 @@ models/
 # 系统文件
 .DS_Store
 Thumbs.db
+

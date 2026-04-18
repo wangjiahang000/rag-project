@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 from .vector_store import create_vector_store, search_documents_with_score
 from .doc_loader import load_and_split
 from .literature_search import get_searcher
+from batch_import.mysql_manager import get_paper_titles_batch
 load_dotenv()
 
 app = FastAPI()
@@ -116,48 +117,59 @@ async def add_paper_to_kb(request: dict):
 @app.post("/chat")
 async def chat(request: dict):
     question = request.get("question", "")
-    history = request.get("history", [])  # 新增：接收历史对话
+    history = request.get("history", [])
     print(f"收到历史对话: {history}")
+    
     # 检索相关文档
     retrieved = search_documents_with_score(question, k=10, score_threshold=1.05)
 
     # 构建消息列表
     messages = []
     
-    # 1. 添加系统提示词
     if retrieved:
-        unique_sources = {}
+        # 按来源合并同一文档的所有块
+        doc_chunks = {}
         for doc in retrieved:
             source = doc.metadata.get("source", "未知")
-            if source not in unique_sources:
-                unique_sources[source] = doc
-    
-        relevant_docs = list(unique_sources.values())[:3]
-        context = "\n\n---\n\n".join([doc.page_content for doc in relevant_docs])
-        sources = list(unique_sources.keys())
-    
+            if source not in doc_chunks:
+                doc_chunks[source] = []
+            doc_chunks[source].append(doc.page_content)
+        
+        # 合并每个文档的内容（取前3个文档）
+        merged_docs = []
+        for source, chunks in list(doc_chunks.items())[:5]:
+            # 合并同一文档的所有块
+            full_content = "\n\n...\n\n".join(chunks)
+            merged_docs.append(full_content)
+        
+        context = "\n\n---\n\n".join(merged_docs)
+        sources = list(doc_chunks.keys())[:3] 
+        
         print(f"📚 使用文档: {sources}")
         print(f"📄 上下文长度: {len(context)} 字符")
     
-        system_prompt = f"""你是一个智能助手。请基于以下参考内容回答用户问题。
+        system_prompt = f"""你是一个智能猫娘文献内容问答助手。请基于以下参考内容回答用户问题.
 
 参考内容：
 {context}
+1. 如果参考内容中包含某个概念的定义或解释，请直接引用并说明
+2. 如果参考内容中只有零散的提及（如机构名称、项目名称），请明确告诉用户"参考内容中没有找到完整的定义，只提到了以下相关内容："
+3. 如果问题无法从参考内容中找到答案，请直接说"资料库中没有相关信息"，然后使用你的知识库回答，你不要编造参考文献"""
 
-注意：如果问题无法从参考内容中找到答案，请直接说"资料库中没有相关信息"，不要编造。"""
         messages.append({"role": "system", "content": system_prompt})
     else:
         print("❌ 没有检索到文档，使用模型自身知识")
         messages.append({"role": "system", "content": "你是一个智能助手，根据你的知识回答用户问题。"})
     
-    # 2. 添加历史对话（最近5轮）
+    # 添加历史对话
     for h in history[-5:]:
         messages.append({"role": "user", "content": h[0]})
         messages.append({"role": "assistant", "content": h[1]})
     
-    # 3. 添加当前问题
+    # 添加当前问题
     messages.append({"role": "user", "content": question})
     print(f"发送给DeepSeek的消息: {messages}")
+    
     # 调用DeepSeek
     response = client.chat.completions.create(
         model="deepseek-chat",
@@ -166,9 +178,26 @@ async def chat(request: dict):
     )
     answer = response.choices[0].message.content
     
-    # 如果有检索结果且答案不是拒绝回答，添加来源
+    # 如果有检索结果且答案不是拒绝回答，添加来源（使用论文标题）
     if retrieved and "资料库中没有相关信息" not in answer:
-        formatted_sources = [f"{i+1}. {source}" for i, source in enumerate(sources)]
+        # 提取 arxiv_id（去掉 .txt 后缀）
+        arxiv_ids = [s.replace('.txt', '') for s in sources]
+        
+        # 批量从数据库获取论文标题
+        titles_map = get_paper_titles_batch(arxiv_ids)
+        
+        # 格式化参考文献，显示标题
+        formatted_sources = []
+        for i, arxiv_id in enumerate(arxiv_ids):
+            title = titles_map.get(arxiv_id)
+            if title:
+                # 截断过长的标题
+                if len(title) > 80:
+                    title = title[:77] + "..."
+                formatted_sources.append(f"{i+1}. [{arxiv_id}] {title}")
+            else:
+                formatted_sources.append(f"{i+1}. {arxiv_id}（标题未找到）")
+        
         answer = answer + "\n\n---\n📚 参考来源：\n" + "\n".join(formatted_sources)
     
     print(f"🤖 LLM 回答:\n{answer}\n")
