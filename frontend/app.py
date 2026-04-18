@@ -16,7 +16,7 @@ def chat_with_deepseek(message,history):
     
 def upload_file(file):
     if file is None:
-        return "请选择文件"
+        return "请选择文件",gr.update(value=None)
     
     try:
         with open(file.name,'rb')as f:
@@ -26,13 +26,13 @@ def upload_file(file):
         if response.status_code==200:
             result=response.json()
             if result.get("status")=="success":
-                return f"帅 上传成功!已处理{result.get('chunks',0)}个文本块"
+                return f"帅 上传成功!已处理{result.get('chunks',0)}个文本块",gr.update(value=None)
             else:
-                return f"可恶 上传失败：{result.get('message','未知错误')}"
+                return f"可恶 上传失败：{result.get('message','未知错误')}",gr.update(value=None)
         else:
-            return f"可恶 上传失败：HTTP{response.status_code}"
+            return f"可恶 上传失败：HTTP{response.status_code}",gr.update(value=None)
     except Exception as e:
-        return f"可恶 连接失败：{str(e)}"
+        return f"可恶 连接失败：{str(e)}",gr.update(value=None)
 
 
 with gr.Blocks(title="个人智能问答助手") as demo:
@@ -56,7 +56,7 @@ with gr.Blocks(title="个人智能问答助手") as demo:
             upload_btn.click(
                 fn=upload_file,
                 inputs=file_input,
-                outputs=upload_status
+                outputs=[upload_status,file_input]
             )
             
             gr.Markdown("---")
