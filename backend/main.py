@@ -58,51 +58,49 @@ async def chat(request: dict):
     question = request.get("question", "")
     
     retrieved = search_documents_with_score(question, k=10, score_threshold=1.05)
-    
+
     if retrieved:
-        high_relevant = [(doc, score) for doc, score in retrieved if score <= 1.0]
-        
-        if high_relevant:
-            unique_sources = {}
-            for doc, score in high_relevant:
-                source = doc.metadata.get("source", "未知")
-                if source not in unique_sources:
-                    unique_sources[source] = doc
-            
-            relevant_docs = list(unique_sources.values())[:3]
-            context = "\n\n---\n\n".join([doc.page_content for doc in relevant_docs])
-            sources = list(unique_sources.keys())
-            
-            print(f"📚 使用文档: {sources}")
-            print(f"📄 上下文长度: {len(context)} 字符")
-            print(f"📄 上下文内容:\n{context[:500]}...")  # 打印上下文前500字符
-            
-            system_prompt = f"""你是一个智能助手。请基于以下参考内容回答用户问题。
+        # retrieved 是文档列表，直接使用
+        unique_sources = {}
+        for doc in retrieved:
+            source = doc.metadata.get("source", "未知")
+            if source not in unique_sources:
+                unique_sources[source] = doc
+    
+        relevant_docs = list(unique_sources.values())[:3]
+        context = "\n\n---\n\n".join([doc.page_content for doc in relevant_docs])
+        sources = list(unique_sources.keys())
+    
+        print(f"📚 使用文档: {sources}")
+        print(f"📄 上下文长度: {len(context)} 字符")
+    
+        system_prompt = f"""你是一个智能助手。请基于以下参考内容回答用户问题。
 
 参考内容：
 {context}
 
 注意：如果问题无法从参考内容中找到答案，请直接说"资料库中没有相关信息"，不要编造。"""
-            
-            response = client.chat.completions.create(
-                model="deepseek-chat",
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": question}
-                ],
-                temperature=0.7
-            )
-            answer = response.choices[0].message.content
-            
-            print(f"🤖 LLM 原始回答:\n{answer}\n")  # 打印 LLM 原始回答
-            
-            if "资料库中没有相关信息" not in answer:
-                formatted_sources = [f"{i+1}. {source}" for i, source in enumerate(sources)]
-                answer = answer + "\n\n---\n📚 参考来源：\n" + "\n".join(formatted_sources)
-            
-            return {"answer": answer}
     
-    print("❌ 没有高相关文档，使用模型自身知识")
+        response = client.chat.completions.create(
+            model="deepseek-chat",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": question}
+            ],
+            temperature=0.7
+        )
+        answer = response.choices[0].message.content
+    
+        print(f"🤖 LLM 原始回答:\n{answer}\n")
+    
+        if "资料库中没有相关信息" not in answer:
+            formatted_sources = [f"{i+1}. {source}" for i, source in enumerate(sources)]
+            answer = answer + "\n\n---\n📚 参考来源：\n" + "\n".join(formatted_sources)
+    
+        return {"answer": answer}
+
+    # 如果没有检索结果
+    print("❌ 没有检索到文档，使用模型自身知识")
     response = client.chat.completions.create(
         model="deepseek-chat",
         messages=[
@@ -112,7 +110,7 @@ async def chat(request: dict):
         temperature=0.7
     )
     answer = response.choices[0].message.content
-    
+
     return {"answer": answer}
 
 @app.get("/health")
