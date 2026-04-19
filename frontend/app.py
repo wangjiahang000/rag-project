@@ -120,37 +120,6 @@ def add_paper_to_kb(selected_paper, papers_list):
                 return f"❌ 连接失败: {str(e)}"
     
     return "❌ 未找到选中的论文"
-def add_paper_to_kb(selected_paper, papers_list):
-    """添加论文到知识库"""
-    if not selected_paper or not papers_list:
-        return "请先选择一篇论文"
-    
-    # 找到选中的论文
-    for paper in papers_list:
-        authors_str = ', '.join(paper['authors'][:2])
-        if len(paper['authors']) > 2:
-            authors_str += ' et al.'
-        display_text = f"{paper['title']} ({paper['published']}) - {authors_str}"
-        
-        if display_text == selected_paper:
-            try:
-                response = requests.post(
-                    "http://localhost:8000/add_paper_to_kb",
-                    json={"paper_id": paper['id'], "paper_title": paper['title']}
-                )
-                if response.status_code == 200:
-                    result = response.json()
-                    if result.get("status") == "success":
-                        return f"✅ {result.get('message', '添加成功')}，共 {result.get('chunks', 0)} 个文本块"
-                    else:
-                        return f"❌ 添加失败：{result.get('message', '未知错误')}"
-                else:
-                    return f"❌ 添加失败：HTTP {response.status_code}"
-            except Exception as e:
-                return f"❌ 连接失败: {str(e)}"
-    
-    return "❌ 未找到选中的论文"
-
 
 # 创建界面
 with gr.Blocks(title="个人智能问答助手", theme="soft") as demo:

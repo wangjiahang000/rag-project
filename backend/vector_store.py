@@ -153,6 +153,8 @@ def hybrid_search(query, k=10, bm25_weight=0.3, vector_weight=0.7, score_thresho
         preview = item['document'].page_content[:50].replace("\n", " ")
         print(f"   BM25: {preview}... (分数: {item['bm25_score']:.2f})")
     
+    bm25_scores = [item['bm25_score'] for item in bm25_results]
+    max_bm25_score = max(bm25_scores) if bm25_scores else 1.0
     # 3. 合并结果（使用加权分数）
     doc_scores = {}
     
@@ -173,7 +175,7 @@ def hybrid_search(query, k=10, bm25_weight=0.3, vector_weight=0.7, score_thresho
         bm25_score = item['bm25_score']
         # BM25分数归一化（假设最大分数为50左右）
         normalized_bm25 = min(bm25_score / 50.0, 1.0)
-        
+        normalized_bm25 = bm25_score / max_bm25_score
         if doc.page_content in doc_scores:
             doc_scores[doc.page_content]['bm25_score'] = normalized_bm25
             doc_scores[doc.page_content]['total_score'] += bm25_weight * normalized_bm25
