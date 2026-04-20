@@ -47,7 +47,7 @@ def tokenize_chinese(text):
 def build_bm25_index(documents):
     """构建BM25索引"""
     print(f"📝 正在构建BM25索引，共 {len(documents)} 个文档...")
-    print(f"文档1分词示例: {tokenized_docs[0][:20]}") 
+    
     # 对所有文档内容进行分词
     tokenized_docs = [tokenize_chinese(doc.page_content) for doc in documents]
     
@@ -55,6 +55,7 @@ def build_bm25_index(documents):
     bm25 = BM25Okapi(tokenized_docs)
     
     # 保存索引和文档内容（用于后续检索时恢复）
+    os.makedirs(os.path.dirname(BM25_INDEX_PATH), exist_ok=True)
     with open(BM25_INDEX_PATH, 'wb') as f:
         pickle.dump(bm25, f)
     
@@ -153,8 +154,10 @@ def hybrid_search(query, k=10, bm25_weight=0.3, vector_weight=0.7, score_thresho
         preview = item['document'].page_content[:50].replace("\n", " ")
         print(f"   BM25: {preview}... (分数: {item['bm25_score']:.2f})")
     
+    # 计算本次查询的 BM25 最大分数，用于动态归一化
     bm25_scores = [item['bm25_score'] for item in bm25_results]
     max_bm25_score = max(bm25_scores) if bm25_scores else 1.0
+    
     # 3. 合并结果（使用加权分数）
     doc_scores = {}
     
@@ -169,13 +172,13 @@ def hybrid_search(query, k=10, bm25_weight=0.3, vector_weight=0.7, score_thresho
             'bm25_score': 0
         }
     
-    # BM25检索结果
+    # BM25检索结果（使用动态归一化）
     for item in bm25_results:
         doc = item['document']
         bm25_score = item['bm25_score']
-        # BM25分数归一化（假设最大分数为50左右）
-        normalized_bm25 = min(bm25_score / 50.0, 1.0)
+        # 动态归一化：除以本次查询的最大 BM25 分数
         normalized_bm25 = bm25_score / max_bm25_score
+        
         if doc.page_content in doc_scores:
             doc_scores[doc.page_content]['bm25_score'] = normalized_bm25
             doc_scores[doc.page_content]['total_score'] += bm25_weight * normalized_bm25
@@ -212,3 +215,39 @@ def search_documents_with_score(query, k=10, score_threshold=1.05):
     兼容旧接口：使用混合检索
     """
     return hybrid_search(query, k=k, score_threshold=score_threshold)
+
+
+def add_documents_batch(documents: list, persist: bool = True):
+    """批量添加文档到向量库（优化版本）"""
+    vector_store = get_vector_store()
+    if not vector_store:
+        create_vector_store(documents)
+    else:
+        vector_store.add_documents(documents)
+        if persist:
+            vector_store.persist()
+    return vector_store
+
+
+def mark_papers_as_vectorized(arxiv_ids: list):
+    """标记论文为已向量化（调用 MySQL 更新）"""
+    try:
+        import sys
+        sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        from batch_import.mysql_manager import mark_as_vectorized_batch
+        mark_as_vectorized_batch(arxiv_ids)
+        print(f"  ✅ 已标记 {len(arxiv_ids)} 篇论文为已向量化")
+    except Exception as e:
+        print(f"  ⚠️ 标记失败: {e}")
+
+
+def get_non_vectorized_papers(limit: int = 100):
+    """获取未向量化的论文列表"""
+    try:
+        import sys
+        sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        from batch_import.mysql_manager import get_non_vectorized_papers
+        return get_non_vectorized_papers(limit)
+    except Exception as e:
+        print(f"  ⚠️ 获取失败: {e}")
+        return []

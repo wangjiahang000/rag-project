@@ -6,7 +6,10 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from .config import PAPER_TXT_DIR, CHUNK_SIZE, CHUNK_OVERLAP
 from .utils import normalize_arxiv_id, safe_filename
-from .mysql_manager import paper_exists, save_paper, log_import
+from .mysql_manager import (
+    paper_exists, save_paper, log_import, mark_as_vectorized,
+    paper_exists_and_vectorized
+)
 from .semantic_scholar_client import download_pdf
 
 
@@ -24,9 +27,14 @@ def pdf_to_txt(pdf_path: str, arxiv_id: str) -> Optional[str]:
         text_content = []
         with open(pdf_path, 'rb') as f:
             reader = PyPDF2.PdfReader(f)
+            # 验证 PDF 有效性
+            if len(reader.pages) == 0:
+                print(f"  ❌ PDF 无效: 没有页面")
+                return None
+            
             for page_num, page in enumerate(reader.pages, 1):
                 text = page.extract_text()
-                if text:
+                if text and text.strip():
                     text_content.append(f"--- 第 {page_num} 页 ---\n")
                     text_content.append(text)
                     text_content.append("\n\n")
@@ -34,7 +42,7 @@ def pdf_to_txt(pdf_path: str, arxiv_id: str) -> Optional[str]:
         if text_content:
             with open(txt_path, 'w', encoding='utf-8') as f:
                 f.write(''.join(text_content))
-            print(f"  TXT 提取成功: {txt_filename}")
+            print(f"  TXT 提取成功: {txt_filename} ({len(text_content)} 字符)")
             return txt_path
         else:
             print(f"  TXT 提取失败: 无文本内容")
@@ -62,7 +70,7 @@ def load_and_chunk(
             content = f.read()
         
         if len(content) < 100:
-            print(f"  ⚠️ 文本过短，跳过向量化")
+            print(f"  ⚠️ 文本过短 ({len(content)} 字符)，跳过向量化")
             return []
         
         # 创建单个 Document（包含完整论文内容）
@@ -72,7 +80,7 @@ def load_and_chunk(
                 "source": f"{arxiv_id}.txt",
                 "paper_id": arxiv_id,
                 "arxiv_id": arxiv_id,
-                "title": title[:500] if title else "",  # 限制长度避免过大
+                "title": title[:500] if title else "",
                 "category": category,
                 "authors": authors[:300] if authors else "",
                 "year": year if year else 0
@@ -87,7 +95,11 @@ def load_and_chunk(
         )
         chunks = splitter.split_documents([doc])
         
-        # 确保每个 chunk 都继承了元数据（splitter 会自动处理）
+        # 为每个 chunk 添加索引
+        for idx, chunk in enumerate(chunks):
+            chunk.metadata["chunk_index"] = idx
+            chunk.metadata["chunk_total"] = len(chunks)
+        
         print(f"  📊 分块完成: {len(chunks)} 个 chunks")
         return chunks
         
@@ -116,10 +128,15 @@ def import_single_paper(paper_info: Dict, category: str) -> Tuple[bool, str, Opt
         log_import("unknown", category, "failed", "缺少 arXiv ID")
         return (False, arxiv_id, None, None)
     
-    # 检查是否已存在
-    if paper_exists(arxiv_id):
-        print(f"  ⏭️ 跳过: {arxiv_id} 已存在")
-        return (True, arxiv_id, None, None)  # 已存在，无需向量化
+    # 检查是否已存在及是否已向量化
+    exists, is_vectorized = paper_exists_and_vectorized(arxiv_id)
+    
+    if exists and is_vectorized:
+        print(f"  ⏭️ 跳过: {arxiv_id} 已完成向量化")
+        return (True, arxiv_id, None, None)
+    
+    if exists and not is_vectorized:
+        print(f"  🔄 重试: {arxiv_id} 已入库但未向量化，重新处理")
     
     print(f"\n📥 导入: {arxiv_id}")
     title = paper_info.get('title', '')
@@ -158,14 +175,14 @@ def import_single_paper(paper_info: Dict, category: str) -> Tuple[bool, str, Opt
         log_import(arxiv_id, category, "failed", "MySQL 保存失败")
         return (False, arxiv_id, None, None)
     
-    # 4. 分块（不立即向量化）
+    # 4. 分块
     chunks = load_and_chunk(txt_path, arxiv_id, title, category, authors, year)
     
     if not chunks:
         log_import(arxiv_id, category, "failed", "分块失败")
         return (False, arxiv_id, None, None)
     
-    # 5. 准备元数据（用于后续批量添加时的日志）
+    # 5. 准备元数据
     metadata = {
         "arxiv_id": arxiv_id,
         "title": title[:100],
