@@ -3,10 +3,28 @@ from .api_client import APIClient
 
 client = APIClient()
 
+def _extract_text(content):
+    """Gradio 6.12 的 content 可能是纯字符串或片段列表 [{"text":"...","type":"text"}]"""
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        parts = []
+        for seg in content:
+            if isinstance(seg, dict):
+                parts.append(seg.get("text") or seg.get("content") or "")
+        return " ".join(parts)
+    return str(content or "")
+
 def chat_fn(message, history):
     formatted_history = []
-    for h in history:
-        formatted_history.append([h[0], h[1]])
+    user_msg = None
+    for msg in history:
+        text = _extract_text(msg.get("content", ""))
+        if msg["role"] == "user":
+            user_msg = text
+        elif msg["role"] == "assistant" and user_msg is not None:
+            formatted_history.append([user_msg, text])
+            user_msg = None
     answer = client.chat(message, formatted_history)
     return answer
 

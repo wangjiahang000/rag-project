@@ -1,6 +1,7 @@
 import os
+import logging
 import pdfplumber
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Tuple
 from .loader import DocumentLoader
 from .searcher import ArxivSearcher
 from .vector_store import VectorStoreManager
@@ -9,6 +10,8 @@ from .models import PaperInfo, ImportResult
 from .utils import normalize_arxiv_id
 from config import settings
 from openai import OpenAI
+
+logger = logging.getLogger(__name__)
 
 class RAGSystem:
     def __init__(self):
@@ -94,12 +97,28 @@ class RAGSystem:
     
     # ---------- 问答 ----------
     def chat(self, question: str, history: List[tuple] = None) -> str:
-        docs = self.vector_store.hybrid_search(
-            question, 
+        logger.info("=" * 60)
+        logger.info("用户问题: %s", question)
+        logger.info("=" * 60)
+
+        results = self.vector_store.hybrid_search(
+            question,
             k=settings.retrieval_k,
             vec_weight=settings.vector_weight,
             bm25_weight=settings.bm25_weight
         )
+        docs = [d for d, _ in results]
+
+        logger.info("-" * 60)
+        logger.info("检索到的文献片段 (共 %d 条):", len(results))
+        logger.info("-" * 60)
+        for i, (doc, score) in enumerate(results, 1):
+            src = doc.metadata.get('source', doc.metadata.get('arxiv_id', 'unknown'))
+            chunk_idx = doc.metadata.get('chunk_index', '?')
+            logger.info("--- [%d] 相关度: %.4f | 来源: %s | 分块: %s ---", i, score, src, chunk_idx)
+            logger.info(doc.page_content)
+            logger.info("")
+
         if not docs:
             context = "暂无相关文献"
             sources = []
@@ -110,6 +129,11 @@ class RAGSystem:
                 by_source.setdefault(src, []).append(doc.page_content)
             context = "\n\n---\n\n".join(["\n".join(chunks) for chunks in by_source.values()])
             sources = list(by_source.keys())
+
+        logger.info("-" * 60)
+        logger.info("发送给 LLM 的上下文 (按来源归并):")
+        logger.info("-" * 60)
+        logger.info(context)
         
         messages = [{
             "role": "system",

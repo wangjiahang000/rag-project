@@ -1,8 +1,15 @@
+import logging
 import subprocess
 import sys
 import time
 import requests
 import os
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(name)s] %(levelname)s: %(message)s",
+    datefmt="%H:%M:%S",
+)
 
 def run_backend():
     return subprocess.Popen(

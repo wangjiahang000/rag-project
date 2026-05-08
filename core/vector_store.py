@@ -6,7 +6,10 @@ from rank_bm25 import BM25Okapi
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain_core.documents import Document
+import logging
 from typing import List, Tuple, Optional
+
+logger = logging.getLogger(__name__)
 
 class VectorStoreManager:
     def __init__(self, model_path: str, persist_dir: str, device: str = "cpu"):
@@ -61,8 +64,8 @@ class VectorStoreManager:
             docs = pickle.load(f)
         return bm25, docs
     
-    def hybrid_search(self, query: str, k: int = 5, 
-                     vec_weight: float = 0.7, bm25_weight: float = 0.3) -> List[Document]:
+    def hybrid_search(self, query: str, k: int = 5,
+                     vec_weight: float = 0.7, bm25_weight: float = 0.3) -> List[Tuple[Document, float]]:
         results = {}
         # 向量检索
         if self.vectorstore:
@@ -73,7 +76,7 @@ class VectorStoreManager:
                 vec_score = 1.0 / (1.0 + score)
                 key = doc.page_content
                 results[key] = {'doc': doc, 'score': vec_weight * vec_score}
-        
+
         # BM25检索
         bm25, docs = self._load_bm25()
         if bm25 and docs:
@@ -91,6 +94,13 @@ class VectorStoreManager:
                     results[key]['score'] += bm25_weight * bm25_norm
                 else:
                     results[key] = {'doc': doc, 'score': bm25_weight * bm25_norm}
-        
-        sorted_docs = sorted(results.values(), key=lambda x: x['score'], reverse=True)
-        return [item['doc'] for item in sorted_docs[:k]]
+
+        sorted_items = sorted(results.values(), key=lambda x: x['score'], reverse=True)
+        top = [(item['doc'], round(item['score'], 4)) for item in sorted_items[:k]]
+
+        logger.info("混合检索结果 (Top-%d):", k)
+        for i, (doc, score) in enumerate(top, 1):
+            src = doc.metadata.get('source', doc.metadata.get('arxiv_id', 'unknown'))
+            logger.info("  [%d] score=%.4f | source=%s | chunk=%s | preview=%.100s",
+                        i, score, src, doc.metadata.get('chunk_index', '?'), doc.page_content)
+        return top

@@ -84,8 +84,10 @@ class MySQLClient:
             return {}
         clean_ids = [id.replace('.txt', '') for id in arxiv_ids]
         conn = self.get_conn()
-        with conn.cursor() as c:
-            placeholders = ','.join(['%s'] * len(clean_ids))
-            c.execute(f"SELECT arxiv_id, title FROM papers WHERE arxiv_id IN ({placeholders})", clean_ids)
-            return {row[0]: row[1] for row in c.fetchall()}
-        conn.close()
+        try:
+            with conn.cursor() as c:
+                placeholders = ','.join(['%s'] * len(clean_ids))
+                c.execute(f"SELECT arxiv_id, title FROM papers WHERE arxiv_id IN ({placeholders})", clean_ids)
+                return {row[0]: row[1] for row in c.fetchall()}
+        finally:
+            conn.close()
