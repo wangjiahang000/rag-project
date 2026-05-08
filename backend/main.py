@@ -2,8 +2,10 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 from backend.routes import upload_router, arxiv_router, chat_router
 import logging
+import os
 
 logging.basicConfig(
     level=logging.INFO,
@@ -38,3 +40,9 @@ app.include_router(chat_router, tags=["Chat"])
 @app.get("/health")
 async def health():
     return {"status": "ok"}
+
+# 托管 React 前端静态文件
+frontend_dist = os.path.join(os.path.dirname(__file__), "..", "frontend_react", "dist")
+if os.path.exists(frontend_dist):
+    app.mount("/", StaticFiles(directory=frontend_dist, html=True), name="frontend")
+    logger.info("React 前端已挂载: %s", frontend_dist)

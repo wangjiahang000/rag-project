@@ -3,15 +3,13 @@ from pathlib import Path
 from pydantic_settings import BaseSettings
 from typing import Optional
 
-# 获取项目根目录的可靠方法：从当前文件向上两级（config.py 位于项目根目录）
 PROJECT_ROOT = Path(__file__).parent.resolve()
 
 class Settings(BaseSettings):
-    # 项目根目录
     project_root: str = str(PROJECT_ROOT)
 
-    # 嵌入模型：自动定位到项目内 models 文件夹
-    embedding_model: str = str(PROJECT_ROOT / "models" / "paraphrase-multilingual-MiniLM-L12-v2")
+    # 嵌入模型：BAAI/bge-m3（支持中文、英文、中英混合）
+    embedding_model: str = str(PROJECT_ROOT / "models" / "BAAI-bge-m3")
     embedding_device: str = "cpu"
 
     # 存储路径
@@ -31,9 +29,9 @@ class Settings(BaseSettings):
     deepseek_api_key: Optional[str] = None
     deepseek_base_url: str = "https://api.deepseek.com"
 
-    # 分块参数
-    chunk_size: int = 800
-    chunk_overlap: int = 150
+    # 分块参数（适配学术论文：段落级分割，兼顾细节与上下文）
+    chunk_size: int = 512
+    chunk_overlap: int = 128
 
     # 检索参数
     retrieval_k: int = 5

@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 class RAGSystem:
     def __init__(self):
-        self.loader = DocumentLoader(settings.chunk_size, settings.chunk_overlap)
+        self.loader = DocumentLoader(chunk_size=settings.chunk_size, chunk_overlap=settings.chunk_overlap)
         self.searcher = ArxivSearcher()
         self.vector_store = VectorStoreManager(
             model_path=settings.embedding_model,
@@ -46,6 +46,41 @@ class RAGSystem:
         self.vector_store.add_documents(chunks)
         return len(chunks)
     
+    # ---------- PDF 提取（含表格转 Markdown）----------
+    @staticmethod
+    def _extract_pdf_with_tables(pdf_path: str) -> str:
+        import pdfplumber
+        pages_text = []
+        with pdfplumber.open(pdf_path) as pdf:
+            for page in pdf.pages:
+                # 1. 常规文本
+                body = page.extract_text() or ""
+
+                # 2. 检测表格 → 转 Markdown
+                tables = page.extract_tables()
+                table_mds = []
+                for table in tables:
+                    if not table or len(table) < 1:
+                        continue
+                    rows = []
+                    for row in table:
+                        cells = [cell.replace("\n", " ") if cell else "" for cell in row]
+                        rows.append("| " + " | ".join(cells) + " |")
+                    # 加分隔行（第二行为 ---）
+                    header = rows[0]
+                    sep = "| " + " | ".join(["---"] * len(table[0])) + " |"
+                    md = header + "\n" + sep
+                    if len(rows) > 1:
+                        md += "\n" + "\n".join(rows[1:])
+                    table_mds.append(md)
+
+                # 3. 合并：文本 + 表格
+                page_text = body
+                if table_mds:
+                    page_text += "\n\n【表格】\n" + "\n\n".join(table_mds)
+                pages_text.append(page_text)
+        return "\n\n".join(pages_text)
+
     # ---------- arXiv 相关 ----------
     def search_arxiv(self, query: str, max_results: int = 10) -> List[PaperInfo]:
         return self.searcher.search(query, max_results)
@@ -59,8 +94,7 @@ class RAGSystem:
         txt_path = os.path.join(settings.papers_txt_dir, f"{arxiv_id}.txt")
         if not os.path.exists(txt_path):
             try:
-                with pdfplumber.open(pdf_path) as pdf:
-                    text = "\n".join(p.extract_text() or "" for p in pdf.pages)
+                text = self._extract_pdf_with_tables(pdf_path)
                 with open(txt_path, 'w', encoding='utf-8') as f:
                     f.write(text)
             except Exception as e:
@@ -105,7 +139,7 @@ class RAGSystem:
             question,
             k=settings.retrieval_k,
             vec_weight=settings.vector_weight,
-            bm25_weight=settings.bm25_weight
+            bm25_weight=0
         )
         docs = [d for d, _ in results]
 
