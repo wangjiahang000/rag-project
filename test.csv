@@ -1,0 +1,901 @@
+text,label
+bert-base uncased 有多少层 transformer 来着,0
+gpt-3 的参数量具体是多少啊,0
+t5 模型有几个版本呢,0
+word2vec 的 embedding 维度一般是多大,0
+transformer 论文是哪一年发表的啊,0
+attention is all you need 的作者是哪些人,0
+glove 和 word2vec 哪个更早出现啊,0
+bert 的预训练任务包括哪两个啊,0
+gpt-2 的 vocabulary size 是多少,0
+llama 系列模型的开源协议是什么啊,0
+bpe 分词算法是谁提出的呢,0
+sequence length 在 bert 里默认是 512 对吧,0
+roberta 和 bert 哪个在 glue 上分数更高啊,0
+xlnet 的核心创新是 permutation language modeling 吗,0
+gpt-3 的上下文窗口大小是多少 token 啊,0
+albert 的参数相比 bert 减少多少来着,0
+electra 的判别器结构是什么啊,0
+bart 和 bert 有什么本质区别呢,0
+pegasus 摘要模型的预训练目标是什么,0
+spacy 的 tokenizer 支持中文吗,0
+huggingface transformers 第一个版本是哪年发布的,0
+ner 任务常用的评估指标是 f1 吗,0
+sentiment analysis 里 bert 的准确率大概多少啊,0
+zero-shot 分类通常用什么模型呢,0
+masked language model 的 mask 概率一般是 15% 对吗,0
+top-k sampling 中 k 通常取多少啊,0
+perplexity 在 gpt 里怎么计算啊,0
+nli 任务的数据集 snli 有多少样本,0
+text generation 里 beam search 的 beam size 一般设多少,0
+distilbert 比 bert 快多少倍啊,0
+ResNet 到底有多少层来着,0
+Mask R-CNN 的 mAP 在 COCO 上是多少啊,0
+YOLOv8 是哪一年发布的呢,0
+ViT 的参数量和 ResNet-50 比哪个大,0
+Faster R-CNN 用的是什么 backbone,0
+GAN 的生成器损失函数是啥来着,0
+MobileNet 的 FLOPs 大概是多少,0
+UNet 最早是用在什么任务上的,0
+SwAG 这个预训练方法是什么时候提出的,0
+Depthwise separable convolution 比普通卷积少多少参数量,0
+EfficientNet-B0 的 top-1 accuracy 是多少,0
+SIFT 特征匹配的阈值一般是设多少,0
+ImageNet 数据集有多少张训练图啊,0
+ConvNeXt 的 kernel size 是多大,0
+BatchNorm 在训练和推理时有什么区别来着,0
+DETR 的训练收敛速度怎么样，要多少 epoch,0
+Siamese network 在跟踪任务里的 backbone 通常用啥,0
+PASCAL VOC 2012 有多少个类别,0
+StyleGAN 的 latent code 维度是多少,0
+ResNeXt 比 ResNet 多加了什么结构,0
+CLIP 的对比学习温度参数 τ 一般取多少,0
+U-Net 里跳连的输入输出是直接拼接还是相加,0
+YOLOv5 的 anchor 大小是怎么聚类的,0
+Transformer 在 CV 里的位置编码用的是什么形式,0
+Group Normalization 和 Layer Normalization 有啥不同,0
+Autoencoder 的 bottleneck 层维度通常怎么选,0
+OpenCV 里读取图像的默认颜色顺序是 BGR 对吧,0
+FPN 的特征金字塔有几层输出,0
+VGG16 的全连接层有多少个神经元,0
+COCO 数据集的 image caption 标注有多少条,0
+transformer 的 attention 机制计算复杂度是 O(n²) 是吧,0
+bert base 模型到底有多少层 transformer 啊,0
+GPT-3 的参数规模是一千七百五十亿对吧,0
+ResNet 在 ImageNet 上的 top-1 准确率是多少来着,0
+Adam 优化器的初始学习率一般设多少呢,0
+dropout 在训练时的默认概率设的是 0.5 吗,0
+batch normalization 是在哪个论文里提出来的啊,0
+卷积层的参数量公式是 kernel_size² * in_channels * out_channels 吧,0
+LSTM 的 hidden size 通常取多少呢,0
+YOLOv5 的 mAP 在 COCO 上大概是多少啊,0
+BERT 的 vocab size 是三万零五十二吗,0
+GAN 的训练 epoch 数一般设多少才够啊,0
+softmax 的 temperature 参数影响什么来着,0
+ResNet-152 的层数具体是多少层啊,0
+transformer 的 head 数在 base 模型里是 12 对吧,0
+学习率 warmup 步数一般设总步数的多少比例呢,0
+VGG-16 有几个卷积层啊,0
+GELU 激活函数是在哪篇论文里提出的呢,0
+ReLU 的负半轴梯度是零对吧,0
+cross entropy loss 和 MSE 在分类任务里哪个更好啊,0
+batch size 一般设 32 还是 64 更稳呢,0
+PyTorch 的 DataLoader 默认 num_workers 是多少啊,0
+XGBoost 的 max_depth 默认是 6 吗,0
+SVM 的核函数默认是 RBF 对吧,0
+随机森林的树的数量一般设 100 够用吗,0
+K-means 的初始中心选择方法默认是随机吗,0
+PCA 降维后保留多少方差比才合理啊,0
+learning rate scheduler 用 cosine 衰减的多吗,0
+early stopping 的 patience 一般设 10 还是 20 呢,0
+transformer 的 FFN 中间维度是四倍 hidden size 对吧,0
+PPO 的 clip 参数默认是多少来着,0
+Deep Q-learning 的收敛性证明最早是哪篇 paper 啊,0
+soft actor-critic 的 temperature 参数初始值一般设多少,0
+AlphaGo 那个版本用了蒙特卡洛树搜索啊,0
+deterministic policy gradient 的原始论文是哪一年的,0
+TRPO 的 surrogate objective 是怎么推导出来的来着,0
+off-policy 的 PPO 版本叫什么名字,0
+MuZero 的网络结构里有没有 LSTM 啊,0
+Dreamer 的 latent 维度默认设多少,0
+reward normalization 在 RL 里是谁先提出来的,0
+distributional RL 的 C51 算法里 atom 数量是多少,0
+Rainbow DQN 整合了哪几种改进啊,0
+HER 的 hindsight 机制里 goal 怎么采样的,0
+GAE 的 lambda 参数一般取多少,0
+PPO 的 surrogate loss 里 epsilon 是 clip 的上界吧,0
+Q-learning 的收敛条件假设有哪些,0
+SAC 的自动温度调整用的是什么 loss 啊,0
+model-based RL 的 MB-MPO 是哪个团队发的,0
+policy gradient 的 baseline 为什么能降低方差,0
+offline RL 的 CQL 保守项权重 alpha 默认值是多少,0
+Inverse RL 的最大熵原理是谁提出的,0
+actor-critic 里 critic 的 target network 更新频率一般设多少,0
+multi-agent RL 的 MADDPG 有没有 centralized critic,0
+symbolic RL 的 differentiable planner 最早是哪篇论文,0
+reward shaping 的 potential-based 理论是谁证的,0
+RL 里的 bootstrapping 是什么意思来着,0
+curiosity-driven exploration 的 ICM 模块用了什么特征,0
+safe RL 的 Lagrange 方法里 penalty 系数怎么调的,0
+option-critic 的 termination 概率是用什么网络输出的,0
+distributed RL 的 A3C 算法里 worker 数量多少合适,0
+机器人抓取那个GraspNet数据集到底包含多少物体啊,0
+ROS 2的最新稳定版本是啥来着,0
+有没有搞过那个用强化学习做导航的，叫啥DDPG的，诞生年份是多少,0
+波士顿动力的Atlas机器人身高到底多少米,0
+UR5机械臂的重复定位精度是多少啊,0
+那个SLAM用的ORB-SLAM3论文是哪年发的,0
+MoveIt 2是不是2022年才正式发布的,0
+人类步行速度平均多少来着，算机器人步态规划要用,0
+四足机器人那个MIT Mini Cheetah最高能跑多快,0
+Gazebo仿真环境和ROS之间那个接口叫啥，对，gazebo_ros_pkg，最早版本是啥时候,0
+KUKA LBR iiwa的额定负载是多少公斤,0
+搞机械臂逆运动学那个IKFast算法是哪年提出的,0
+PX4飞控的版本号到多少了，最新的是不是1.14,0
+人形机器人那个Atlas做后空翻是哪一年做到的,0
+机器人避障常用的Dynamic Window Approach是哪年论文,0
+RRT*算法是不是2011年发表的,0
+机器人里那个EKF，扩展卡尔曼滤波，最早用在SLAM是哪一年,0
+SpotMini机器人最大续航时间多少,0
+Franka Emika Panda机械臂的力控精度是多少,0
+那个机器人路径搜索的A*算法原始论文是哪年的,0
+ROS Noetic对应的Ubuntu版本是多少，20.04吧,0
+机器人电机控制常用的PID参数整定方法，Ziegler–Nichols是哪年提出的,0
+Fetch Robotics的Freight机器人最大负载多少公斤,0
+搞机器人抓取那个DexNet网络，训练数据有多少个样本,0
+机器人轨迹规划里五次多项式插值的优点是不是加速度连续,0
+Rethink Robotics的Baxter机器人有效载荷多少,0
+用在机器人上的那个ICP算法，迭代最近点，最早论文是哪年,0
+四旋翼无人机那个PX4固件最早支持航点飞行是哪个版本,0
+机器人灵巧手那个Shadow Hand有多少个自由度来着,0
+那个用强化学习的机器人抓取论文里，成功率最高是多少来着,0
+什么是 transformer 里的自注意力机制来着,1
+chain of thought prompting 到底啥意思啊,1
+NLP 里说的词嵌入能通俗解释下吗,1
+掩码语言模型是干啥的，能定义下吗,1
+什么是 few-shot learning 在 NLP 里的应用,1
+positional encoding 在 transformer 里起什么作用,1
+谁能告诉我 BERT 的预训练任务具体是啥,1
+语言模型中的 perplexity 是什么指标啊,1
+什么是 sequence-to-sequence 模型啊,1
+attention is all you need 里说的多头注意力是啥,1
+text classification 里的 tokenization 怎么理解,1
+什么是 prompt tuning 啊，跟 fine-tuning 有啥区别,1
+命名实体识别里的 BIO 标注啥意思,1
+什么是 zero-shot 学习啊，在 NLP 里怎么用,1
+GPT 里的自回归生成是怎么回事,1
+什么是因果语言模型啊，跟掩码模型有啥不同,1
+word2vec 里的 skip-gram 和 CBOW 分别啥意思,1
+什么是 Siamese network，在 NLP 里干啥用,1
+对抗训练在 NLP 里具体怎么定义的,1
+什么是 transformer 的 encoder 和 decoder 啊,1
+知识蒸馏在 NLP 里是啥意思,1
+什么是 prefix tuning 啊,1
+文本生成里的 beam search 是啥算法,1
+什么是 cross-lingual transfer learning,1
+什么是 instruction tuning 在 NLP 里,1
+句子相似度任务里的 cosine similarity 怎么理解,1
+什么是 span-based 的命名实体识别,1
+预训练模型里的 mask rate 是啥意思,1
+什么是 greedy decoding 在生成任务中,1
+知识图谱里的实体链接是啥定义,1
+什么是图像分割的 fully convolutional network 啊,1
+CNN 的 pooling 层到底咋减少参数量的来着,1
+batch normalization 在 CV 里具体是干啥的,1
+transfer learning 在图像识别中是什么意思,1
+啥叫 attention mechanism 在 vision transformer 里,1
+backbone 网络在目标检测里指的是啥,1
+data augmentation 在 CV 里包括哪些操作,1
+什么是 Anchor box 在 YOLO 里的作用,1
+语义分割和实例分割的区别是啥呢,1
+ReLU 激活函数在图像任务中有啥好处,1
+什么是 feature pyramid network 啊,1
+dropout 在卷积神经网络里怎么用的,1
+什么是 Region Proposal Network 在 Faster R-CNN 里,1
+softmax 在图像分类任务中扮演什么角色,1
+什么是 end-to-end 训练在 CV 里,1
+generative adversarial network 在图像生成中怎么定义,1
+什么是 image inpainting 技术啊,1
+什么是 object detection 里的 mAP 指标,1
+skip connection 在 U-Net 里是干啥的呢,1
+什么是 receptive field 在卷积神经网络中,1
+什么是 knowledge distillation 在 CV 里的应用,1
+什么是 few-shot learning 在图像分类中,1
+什么是 optical flow 在视频处理里的定义,1
+什么是 style transfer 在图像处理中,1
+什么是 super resolution 里的 upsampling 操作,1
+conditional random field 在语义分割中怎么用的,1
+什么是 multi-task learning 在 CV 里,1
+什么是 non-maximum suppression 在目标检测里,1
+什么是 self-supervised learning 在图像领域,1
+什么是 spatial transformer network 啊,1
+什么是大模型的 attention 机制啊,1
+线性回归和 logistic regression 的区别是啥来着,1
+什么叫 gradient descent 的收敛性,1
+batch normalization 是怎么工作的,1
+self-attention 和 cross-attention 有啥不同呢,1
+啥是 reinforcement learning 里的 discount factor,1
+transformer 模型的 positional encoding 是干嘛的,1
+过拟合和 underfitting 分别指什么,1
+什么是 kernel trick 支持向量机里的,1
+dropout 层到底怎么防止过拟合的,1
+L1 和 L2 正则化的区别是啥,1
+啥叫 learning rate 的 warmup 策略,1
+多头注意力机制里的 head 是怎么划分的,1
+gradient clipping 是什么意思啊,1
+什么是 contrastive loss 和 triplet loss,1
+softmax 函数的作用是啥,1
+啥是神经网络的 vanishing gradient 问题,1
+什么是 feature engineering 在机器学习中,1
+LSTM 的门控机制是怎么设计的,1
+什么是 Gini impurity 决策树里的,1
+什么叫 embedding 在 NLP 里,1
+什么是 batch size 对训练的影响,1
+啥是权重初始化 Xavier 方法,1
+什么是 k-fold cross-validation,1
+什么叫 epsilon-greedy 策略在强化学习中,1
+什么是激活函数 ReLU 的优势,1
+啥是 residual connection 在 ResNet 里,1
+什么是 word2vec 的 CBOW 模式,1
+什么叫 learning rate 的 decay 策略,1
+怎么理解transformer模型里的self-attention啊,1
+强化学习里的策略梯度到底是个啥来着,1
+什么是MDP啊，马尔可夫决策过程在RL中咋定义的,1
+TD误差和蒙特卡洛方法有啥区别，解释一下,1
+Q-learning和DQN的核心区别是啥,1
+什么是on-policy和off-policy啊，能举个例子吗,1
+REINFORCE算法具体是怎么更新参数的,1
+贝尔曼方程是干啥用的，在RL里,1
+PPO算法的clip机制是啥意思,1
+SAC算法里那个熵正则化是啥,1
+什么是exploration和exploitation的trade-off,1
+Advantage函数在actor-critic里咋算的,1
+什么是value function和policy function的区别,1
+Policy iteration和value iteration有啥区别,1
+Multi-armed bandit问题里的regret是啥,1
+Deep Q-network里的经验回放是干啥的,1
+什么是目标网络啊，在DQN里,1
+A2C和A3C的区别具体在哪里,1
+什么是部分可观测马尔可夫决策过程POMDP,1
+奖励稀疏问题在RL里咋定义的,1
+什么是贝叶斯强化学习，和普通RL有啥不同,1
+Offline RL里的distribution shift是啥,1
+什么是reward shaping，它有用吗,1
+Policy gradient方法和value-based方法核心差异,1
+什么是importance sampling在RL里,1
+TRPO和PPO的信任区域约束有啥区别,1
+Multi-agent RL里的centralized training decentralized execution是啥,1
+什么是逆强化学习IRL，用来干啥的,1
+Model-based RL和model-free RL的主要区别是啥,1
+什么是returns-to-go，在决策transformer里,1
+Soft Q-learning里的softmax贝尔曼方程是啥,1
+什么是 inverse kinematics 啊,1
+ROS 里那个 TF 变换是干嘛的来着,1
+搞不懂 SLAM 中的图优化到底是啥,1
+能解释下 robot dynamics 中的 Lagrange 方法吗,1
+什么是 point cloud 的 ICP 配准啊,1
+reinforcement learning 在 robotics 里怎么定义的呢,1
+请教下 configuration space 到底是什么,1
+问下 path planning 里 RRT 算法的原理,1
+啥是机器人学里的 forward kinematics 啊,1
+能讲讲 end-effector 的 workspace 定义吗,1
+什么是 impedance control 啊,1
+问一下 robot manipulator 的 Jacobian 矩阵是干嘛的,1
+想确认下什么是 model predictive control 在机器人中的应用,1
+能解释下 grasping 里的 force closure 吗,1
+什么是 sensor fusion 中的 Kalman 滤波啊,1
+问下 trajectory optimization 里的 direct collocation 是啥,1
+搞不懂什么是 bipedal locomotion 里的 ZMP 呢,1
+什么是 robot localization 中的蒙特卡洛方法,1
+请教下什么是 soft robotics 里的 continuum manipulator,1
+能说说什么是 motion planning 里的 PRM 算法吗,1
+什么是 robotic arm 的 singularity 啊,1
+问下什么是 visual servoing 里的 image Jacobian,1
+什么是 differential drive 的 kinematics 模型,1
+能解释下什么是 haptic feedback 的 impedance rendering,1
+什么是 multi-robot systems 里的 consensus 算法,1
+问下什么是 mobile robot 的 odometry 啊,1
+搞不懂什么是 task space 和 joint space 的区别,1
+什么是 robot learning 里的 imitation learning 呢,1
+能讲讲什么是 autonomous navigation 中的 costmap,1
+什么是 robot gripper 的 parallel jaw 设计啊,1
+BERT和RoBERTa在情感分析上哪个更强啊,2
+GPT和T5做文本生成任务对比起来怎么样呢,2
+对比学习在句子表示上比监督学习好多少,2
+Transformer和LSTM做序列标注差多少啊,2
+mT5和XLM-R在多语言NLP任务上谁更优,2
+蒸馏BERT和原版BERT在推理速度上差多少啊,2
+GPT-3和LLaMA做少样本学习哪个更靠谱,2
+Siamese网络和双塔模型做语义匹配哪个效果好,2
+ALBERT和ELECTRA在预训练效率上怎么比啊,2
+BiLSTM-CRF和Transformer-CRF做命名实体识别谁更准,2
+Self-Attention和Cross-Attention在机器翻译中表现差多少,2
+长文本任务中Longformer比BERT好多少啊,2
+对比PPO和DPO在RLHF中对齐效果哪个更好,2
+SimCSE和Contrastive学习在无监督句子嵌入上对比如何,2
+Word2Vec和GloVe做词嵌入哪个更适合下游任务,2
+GPT-4和Claude在阅读理解能力上谁更强,2
+预训练模型和从头训练模型在分类任务上差多少,2
+Seq2Seq和Pointer Network做摘要哪个更优,2
+AdamW和SGD优化器在微调BERT时哪个收敛更快,2
+LoRA和Adapter做微调哪个更省显存啊,2
+textCNN和LSTM做文本分类哪个更快呢,2
+GNN和Transformer做知识图谱推理谁更好,2
+Unigram和BPE做子词切分在翻译中谁更优,2
+单向模型和双向模型在语言建模上表现差多少,2
+GPT-3和BERT做零样本分类哪个更准,2
+Char-level和Word-level模型在拼写纠错中对比如何,2
+Frozen BERT和Full Fine-tuning在低资源任务上谁更适用,2
+Beam Search和Greedy Decoding在生成质量上差多少,2
+MLM和CLM预训练任务在下游任务中哪个更好,2
+Conditional GAN和VAE做文本生成哪个更像人写的啊,2
+ResNet和ViT在ImageNet上的精度到底差多少啊,2
+YOLOv8跟YOLOv5在实时检测上哪个更快呢,2
+GAN和扩散模型生成高清人脸哪个效果更真实啊,2
+Mask R-CNN和DETR在实例分割上谁更准,2
+对比学习那套SimCLR跟MoCo在少样本任务上差多少,2
+FPN和BiFPN在特征融合上哪个提升大啊,2
+Depthwise Conv和普通Conv在轻量化模型里谁更省参数,2
+Transformer跟CNN在图像分类小数据集上哪个更稳,2
+BatchNorm和LayerNorm在ViT训练里哪个收敛快啊,2
+UNet和SegFormer在医学分割上精度差距大不大,2
+CLIP和BLIP在零样本分类上谁更强呢,2
+EfficientNet和MobileNet在移动端推理速度差多少,2
+Swish激活跟ReLU在深层ResNet上谁表现好,2
+R-CNN系列和YOLO系列在检测精度上到底谁高啊,2
+ViT的patch size设16跟8哪个对细粒度分类更友好,2
+GAN的WGAN-GP和SAGAN在生成多样性上谁更好,2
+Siamese网络和对比学习在小样本分类上哪个更简单,2
+Dropout和DropPath在ViT训练中哪个更防过拟合,2
+Residual连接和Dense连接在深度网络上谁更有效,2
+StyleGAN和ProGAN在生成高分辨率图像上谁更快,2
+L1损失和L2损失在图像超分辨率上哪个更锐利,2
+SyncBN和普通BN在多卡训练里谁更稳定啊,2
+CenterNet和FCOS在无锚检测上谁更准,2
+SimCLR和BYOL在无监督特征学习上谁更依赖大batch,2
+MultiHead Attention和Cross Attention在ViT里谁更关键,2
+ConvNeXt和Swin Transformer在ImageNet上谁更优,2
+GAN的LSGAN和Hinge损失谁训练更稳定呢,2
+ResNet-50和ResNet-101在COCO上推理时间差多少,2
+CPM和Hourglass在人体姿态估计上谁更精确,2
+Faster R-CNN和RetinaNet在密集小目标上谁更强,2
+transformer 和 lstm 在时间序列预测上到底谁更牛啊,2
+对比一下对比学习和自监督学习哪个效果更稳,2
+dropout 和 weight decay 哪个正则化效果更强来着,2
+batch normalization 和 layer normalization 在 cnn 里谁更好用,2
+adam 和 sgd 优化器哪个收敛更快呢,2
+gpt 和 bert 的预训练方法差异大不大,2
+对比一下 resnet 和 densenet 的参数效率,2
+swin transformer 和 vit 哪个在图像分类上表现更好,2
+attention 和 rnn 的序列建模能力差别明显吗,2
+对比一下梯度剪裁和权重衰减谁更防止梯度爆炸,2
+对比学习中的 simclr 和 moco 哪个效果更稳定啊,2
+随机森林和 xgboost 在表格数据上谁更强,2
+对比一下自注意力机制和卷积层的感受野差异,2
+relu 和 gelu 激活函数在 transformer 里哪个更常用,2
+对比一下端到端学习和两阶段训练哪个更实用呢,2
+对比一下图神经网络和传统节点嵌入方法,2
+对比一下知识蒸馏和模型剪枝谁更省内存,2
+对比一下 early stopping 和 dropout 谁防过拟合更有效,2
+对比一下 one-hot 编码和词嵌入在文本特征里的优劣,2
+对比一下数据增强和正则化哪个对泛化帮助大,2
+对比一下迁移学习和多任务学习在少样本场景的差异,2
+对比一下卷积核大小对图像特征提取的影响,2
+对比一下 softmax 和 sigmoid 在多分类中的适用性,2
+对比一下线性回归和逻辑回归在特征关系上的假设,2
+对比一下 k-means 和谱聚类的聚类效果,2
+对比一下元学习和强化学习在自适应策略上的区别,2
+对比一下变分自编码器和生成对抗网络谁生成图像更清晰,2
+对比一下梯度提升和随机森林在偏差方差上的权衡,2
+对比一下核方法在 svm 和神经网络里的差异,2
+对比一下贝叶斯优化和网格搜索在超参数调优上的效率,2
+PPO 和 SAC 在连续控制任务上哪个更稳定啊,2
+TRPO 跟 PPO 比起来收敛速度差多少,2
+offline RL 和 online RL 在样本效率上差多少呢,2
+DQN 和双 Q 网络在 Atari 游戏上效果差异大吗,2
+REINFORCE 和 Actor-Critic 梯度方差差多少来着,2
+Q-learning 和 SARSA 在策略评估上优劣怎么比,2
+HER 和普通 replay buffer 在稀疏奖励下效果差距大不,2
+PPO-clip 和 PPO-penalty 哪个在实际应用中更好,2
+distributional RL 和传统 value-based 方法差别在哪,2
+Soft Actor-Critic 和 TD3 哪个对超参数更敏感啊,2
+Monte Carlo 和 TD 方法在方差偏差权衡上差多少,2
+model-based RL 和 model-free RL 在数据效率上差距多大,2
+Rainbow DQN 和简单 DQN 在性能提升上差多少,2
+GAE 和普通优势估计在策略梯度里效果差异大吗,2
+离散动作和连续动作空间里 PPO 表现差多少,2
+A3C 和 A2C 在并行训练效率上差异咋样,2
+DQN 和 C51 在分布建模上差别大不大呢,2
+off-policy 和 on-policy 算法在样本复用上差多少,2
+PPO 和 DDPG 在高维连续控制里哪个更靠谱,2
+分层 RL 和普通 RL 在长 horizon 任务上差距多大,2
+value iteration 和 policy iteration 收敛速度差多少啊,2
+GAIL 和 BC 在模仿学习里效果差多少呢,2
+curiosity-driven RL 和 intrinsic motivation 方法差别在哪,2
+DQN 和 Double DQN 在过估计问题上改善多少,2
+TRPO 的 natural gradient 和普通梯度更新差别大吗,2
+Q-learning 和 expected SARSA 在方差上差多少,2
+多智能体 RL 里 MADDPG 和 COMA 性能差异咋样,2
+R2D2 和 APE-X DQN 在分布式训练效率上差多少,2
+Dreamer 和 MuZero 在 model-based 方法里哪个更好用,2
+on-policy 和 off-policy 的 policy gradient 算法样本效率差多少,2
+机械臂用强化学习还是模仿学习效果更好啊,2
+视觉SLAM和激光SLAM在机器人定位上哪个更准呢,2
+ROS和ROS2在实时性上差多少来着,2
+运动规划里RRT和A*算法哪个更适合动态环境,2
+抓取任务用点云还是RGB-D图像更靠谱,2
+轮式机器人和四足机器人在不平地形上谁更稳,2
+深度强化学习和模型预测控制在机器人控制里优劣对比,2
+基于模型的强化学习和无模型的在机器人任务中差多少,2
+机械臂的阻抗控制和力位混合控制哪个更鲁棒,2
+视觉里程计用ORB-SLAM还是DVO效果更好呢,2
+KUKA和UR机械臂在精度上区别大不大啊,2
+仿真环境用Gazebo还是MuJoCo更真实,2
+路径规划里PRM和RRT*谁收敛更快,2
+机器人避障用人工势场法和DWA哪个更靠谱,2
+灵巧手抓取用深度学习和传统几何方法效果差多少,2
+多机器人协同用集中式还是分布式控制更好,2
+外骨骼机器人用PID还是滑模控制更合适,2
+移动机器人的里程计融合用EKF和粒子滤波谁更准,2
+机械臂轨迹优化用样条插值和多项式哪个更平滑,2
+语音控制机器人和手势控制哪个更自然啊,2
+四足机器人步态用CPG还是零力矩点更稳定,2
+服务机器人导航用A*和D* Lite哪个更高效,2
+物体抓取姿态估计用PointNet++还是VoxNet效果好,2
+水下机器人和空中机器人在环境感知上谁更难搞,2
+机械臂的逆运动学用解析法和数值法哪个更快,2
+机器人学习里迁移学习和元学习哪个泛化更强,2
+双足机器人和四足机器人在能效上谁更省电,2
+SLAM后端优化用g2o还是Ceres库更稳啊,2
+自主导航用端到端学习和模块化方法哪个更可靠,2
+机器人力觉传感器和扭矩传感器在反馈上区别大不大,2
+怎么用 bert 做文本分类啊,3
+fine-tune gpt 的时候怎么处理长序列,3
+用 huggingface 的 pipeline 做情感分析具体咋搞,3
+怎么用 tokenizer 把句子转成 input ids,3
+训练 n-gram 语言模型用啥工具,3
+怎么用 spaCy 提取实体关系来着,3
+用 transformers 库加载预训练模型怎么写,3
+怎么用 word2vec 做词向量可视化,3
+用 pytorch 写一个简单的 lstm 文本分类咋弄,3
+怎么用 nltk 去除停用词啊,3
+用 bert 做序列标注任务需要改哪些层,3
+怎么用 sentence-transformers 计算句子相似度,3
+用 lora 微调 llama 需要多少显存,3
+怎么用 huggingface 的 trainer 训练模型,3
+处理中文分词用 jieba 还是 pkuseg 好,3
+怎么用 t5 做文本摘要生成,3
+用 gensim 训练 doc2vec 的具体步骤,3
+怎么用 attention 机制可视化模型输出,3
+用 huggingface 的 tokenizer 设置 max length 咋搞,3
+怎么用 fasttext 训练文本分类器,3
+用 pytorch lightning 训练 nlp 模型咋配置,3
+怎么用 scikit-learn 做 tf-idf 特征提取,3
+用 huggingface 的模型做零样本分类怎么写,3
+怎么用 transformers 的 pipeline 做命名实体识别,3
+用 lora 微调 chatglm 需要改啥配置,3
+怎么用 deepspeed 加速 nlp 模型训练,3
+用 spacy 做依存句法分析的具体命令,3
+怎么用 bert 做句子对分类任务,3
+用 beam search 生成文本咋实现,3
+怎么用 huggingface 的 datasets 库加载自定义数据,3
+怎么用 torchvision 做数据增强啊,3
+OpenCV 里咋用 Canny 边缘检测来着,3
+用 YOLOv8 训练自定义数据集是不是要改配置啊,3
+PyTorch 里怎么用多卡训练 ResNet 啊,3
+咋用 OpenCV 把视频帧提取出来做光流分析,3
+用 Segmentation Models 库能直接加载预训练权重吗,3
+怎么用 Grad-CAM 可视化 CNN 的注意力热图,3
+ImageNet 预训练模型怎么转成 ONNX 格式啊,3
+用 OpenCV 的 SIFT 做特征匹配步骤是啥来着,3
+训练 Mask R-CNN 时怎么调 anchor 大小呢,3
+用 TensorBoard 可视化训练损失和 mAP 咋设置啊,3
+PyTorch 里怎么实现 Focal Loss 啊,3
+怎么用 OpenCV 做透视变换校正图像呢,3
+GAN 训练时用 WGAN-GP 的梯度惩罚咋写啊,3
+用 OpenCV 的 VideoCapture 读 RTSP 流卡顿咋解决,3
+怎么用 OpenCV 做图像去噪处理呢,3
+用 torchvision.transforms 做随机裁剪的代码咋写,3
+训练 ViT 时学习率调度器用余弦退火怎么设啊,3
+怎么用 OpenCV 做颜色空间转换啊,3
+用 Detectron2 训练自定义数据集要改哪些文件,3
+咋用 OpenCV 的 findContours 提取物体轮廓呢,3
+PyTorch 里怎么冻结骨干网络只训练分类头啊,3
+用 OpenCV 做直方图均衡化是不是能增强对比度,3
+怎么用 mixed precision 混合精度训练加速呢,3
+OpenCV 里能否直接用 Haar 级联检测人脸呢,3
+用 OpenCV 的 morphological 操作做去噪咋整,3
+怎么用 wandb 可视化 CV 训练过程啊,3
+PyTorch 中怎么用 DataLoader 做多进程加载呢,3
+用 OpenCV 做图像拼接的步骤是啥啊,3
+训练 EfficientNet 时怎么调整输入分辨率呢,3
+怎么用LoRA微调一个LLaMA模型啊,3
+PyTorch里分布式训练DDP怎么配置来着,3
+想试试DeepSpeed ZeRO-3，怎么装啊,3
+用什么工具做模型剪枝比较好呢,3
+怎么用HuggingFace的Trainer做混合精度训练,3
+训练时梯度爆炸了，怎么加gradient clipping啊,3
+怎么在Colab上跑一个ViT的推理,3
+怎么把PyTorch模型转成ONNX格式啊,3
+用什么框架做联邦学习比较方便,3
+怎么用Ray做分布式超参搜索呢,3
+怎么用Git LFS上传大模型文件,3
+想用强化学习调参，怎么搭环境啊,3
+怎么用Weights & Biases记录训练日志,3
+怎么计算模型的FLOPS和参数量,3
+怎么用TensorBoard查看梯度直方图,3
+怎么在SageMaker上部署一个BERT模型,3
+怎么用torch.compile加速训练呢,3
+想用LoRA做多任务微调，怎么配置,3
+怎么用混洗（shuffle）数据来避免过拟合,3
+怎么用PyTorch的DataLoader加载大文件,3
+怎么用自动混合精度（AMP）减少显存占用,3
+怎么用Optuna调超参数啊,3
+怎么把模型从PyTorch转成TensorFlow,3
+怎么用vLLM部署大模型推理服务,3
+怎么用huggingface的datasets库处理数据,3
+怎么用NVIDIA的Nemo做语音识别训练,3
+怎么用ONNX Runtime加速推理,3
+怎么在单卡上训练大模型，用gradient checkpoint,3
+怎么用MLflow管理实验记录,3
+怎么用PyTorch写自定义损失函数,3
+怎么用 PPO 算法调参才能让 RL 训练更稳定呢,3
+如何用 RLHF 做偏好对齐来着,3
+怎么在 RL 里用 off-policy 方法更新策略啊,3
+怎么搭建一个 Deep Q-Network 环境来训练游戏智能体,3
+用 SAC 算法时怎么设置温度参数比较好,3
+怎么在 RL 训练中加 curiosity-driven exploration 啊,3
+如何用 stable-baselines3 实现 TRPO 算法呢,3
+怎么用 generalized advantage estimation 降低方差来着,3
+多智能体 RL 里怎么调 reward shaping 啊,3
+怎么用 RL 来做 reward-free 预训练呢,3
+怎么在 RL 里嵌入 transformer 作为策略网络,3
+怎么用 population-based training 来调超参啊,3
+如何用 intrinsic motivation 解决稀疏奖励问题,3
+怎么在 RL 里用 contrastive learning 来做表示学习,3
+怎么用 distributional RL 来估计价值分布呢,3
+如何用 dreamer 架构做 model-based RL 训练,3
+怎么用 hindsight experience replay 处理失败经验啊,3
+如何用 soft actor-critic 做连续控制任务,3
+怎么用 double DQN 解决过估计问题来着,3
+怎么在 RL 环境里加入 domain randomization 增强泛化,3
+如何用 offline RL 来训练基于 demonstration 的策略,3
+怎么用 curiosity-driven exploration 避免陷入局部最优啊,3
+如何用 meta-RL 做快速适应新任务,3
+怎么用 policy gradient 方法时处理高维动作空间,3
+如何用多步 TD error 加速 RL 收敛啊,3
+怎么在 RL 里用 hierarchical 架构分解复杂任务,3
+怎么用 V-trace 做 off-policy 重要性采样呢,3
+如何用 reward decomposition 提升 RL 可解释性,3
+怎么在 RL 里用 adversarial training 增强鲁棒性,3
+怎么用 action masking 约束 RL 动作空间啊,3
+怎么用 ROS2 写一个抓取物体的节点啊,3
+ur5 机械臂用 moveit 做路径规划咋配置,3
+rosbag 录制的话题怎么回放成实时数据啊,3
+机器人导航用 gmapping 还是 cartographer 好,3
+用 gazebo 仿真时怎么给轮子加摩擦参数,3
+rviz 里显示深度相机的点云需要装什么插件,3
+机器人逆运动学用 trac-ik 库怎么调,3
+kalman 滤波在机器人状态估计里怎么实现,3
+用 ros2 control 控制关节电机咋写控制器,3
+激光雷达数据怎么转成 costmap 做避障,3
+机械臂抓取时怎么用点云做碰撞检测,3
+用 ros2 launch 启动多个节点怎么传参数,3
+机器人底盘用差速驱动模型在 kinetic 里咋建,3
+vins-mono 跑出来的轨迹怎么和真值对齐啊,3
+想用 realsense 做手眼标定要用啥工具,3
+ros2 里 tf2 的广播监听怎么写啊,3
+机器人路径规划用 rrt 还是 a-star 更靠谱,3
+用 orbslam3 做导航时需要改哪些参数,3
+ros 中 service 和 action 的区别是啥来着,3
+用 linux 的串口读机器人电机数据咋弄,3
+深度强化学习训练机器人用哪个仿真环境,3
+ros2 的节点通信用 dds 配置复杂吗,3
+机械臂的 dh 参数怎么从 urdf 文件提取,3
+用 ros2 bag 记录数据时怎么指定压缩格式,3
+机器人 pid 调参时怎么用 rostopic 看响应,3
+用 moveit 做笛卡尔路径规划咋采样中间点,3
+ros1 和 ros2 混用该怎么桥接节点,3
+机器人视觉里用 opencv 做 ar 标签追踪咋整,3
+用 pybullet 仿真双足机器人怎么设关节限制,3
+ros2 中 nav2 的全局路径规划器怎么自定义,3
+最近有没有啥关于 transformer 的新改进啊,4
+想找一篇 NLP 领域用对比学习做文本表示的文章,4
+有没有人用 BERT 做情感分析的最新综述呢,4
+预训练语言模型在少样本学习上有什么新进展,4
+想看看 prompt tuning 在文本分类上的探索,4
+有没有关于大语言模型推理能力的综述推荐,4
+最近 attention 机制在 NLP 里有什么新变体,4
+想找用 GPT 做知识蒸馏的论文来着,4
+有没有人研究语言模型的可解释性啊,4
+想看看 tokenization 方法的最新比较,4
+有没有关于 NLP 中数据增强的综述,4
+最近 LLM 在机器翻译上有什么突破呢,4
+想找一篇用 RoBERTa 做命名实体识别的文章,4
+有没有关于文本生成中的解码策略的论文,4
+想看看多模态 NLP 最近有什么新工作,4
+有没有关于词嵌入表示学习的最新进展,4
+最近 sequence-to-sequence 模型有啥改进,4
+想找用 BART 做文本摘要的综述,4
+有没有人研究语言模型中的涌现能力啊,4
+想看看 zero-shot 学习在 NLP 里的应用,4
+有没有关于 fine-tuning 策略对模型影响的研究,4
+最近 NLP 里的对抗训练有什么新思路,4
+想找一篇关于文本纠错的论文呢,4
+有没有人用 LLaMA 做指令微调的最新工作,4
+想看看 RAG 在问答系统上的进展,4
+有没有关于语言模型幻觉问题的综述,4
+最近预训练模型中的 scaling law 有什么研究,4
+想找一篇用 T5 做多任务学习的文章,4
+有没有关于 NLP 中的迁移学习的新综述,4
+想看看大模型在代码生成上的应用来着,4
+有没有最新的 ViT 综述啊,4
+最近 CVPR 上的人体姿态估计进展有哪些,4
+想找点关于扩散模型做图像生成的论文,4
+语义分割的 transformer 方法有啥新工作呢,4
+有没有多模态大模型在 CV 上的应用综述,4
+目标检测的 yolo 系列最新版本是啥来着,4
+自监督学习在图像识别上的综述推荐一下,4
+NeRF 的最新进展有没有好的论文,4
+GAN 做图像超分现在还有人在搞吗,4
+视觉语言模型比如 CLIP 的应用综述有吗,4
+关于图像修复的深度学习综述求推荐,4
+轻量级 CNN 移动端部署的新论文有哪些,4
+点云分割的最新方法能搜到吗,4
+视频理解中的时空注意力论文有推荐没,4
+人脸生成用 StyleGAN 有啥新进展,4
+对抗攻击在 CV 上的综述有哪些,4
+目标跟踪的 siamese 网络新工作呢,4
+图像压缩的神经网络方法论文求推荐,4
+数据增强技术比如 cutmix 的综述有吗,4
+弱监督语义分割的最新进展想了解一下,4
+3D 重建用 NeRF 的最新论文有哪些,4
+实例分割的 mask r-cnn 改进工作呢,4
+视觉 transformer 做目标检测的综述,4
+图像分类的 efficientnet 后续有更新吗,4
+生成对抗网络在医学图像上的应用综述,4
+视觉导航的强化学习论文有哪些,4
+知识蒸馏在轻量化模型上的新进展,4
+多视图立体匹配的深度学习综述推荐,4
+图像去雾的端到端方法最新论文呢,4
+自动驾驶中的感知算法综述有没有好的,4
+有没有关于 diffusion model 在图像生成中最新进展的综述啊,4
+最近 transformer 在 ML 里有哪些新的架构改进呢,4
+强化学习结合 LLM 的论文有推荐的没,4
+想看看 self-supervised learning 在视觉任务上的综述,4
+有没有讲 gradient boosting 最新优化的文章,4
+attention mechanism 在 NLP 之外的应用有哪些新方向啊,4
+GAN 训练稳定性方面有没有好的 survey 来着,4
+搞 meta learning 的最近有啥新综述没,4
+对比学习在 representation learning 里的最新进展求推荐,4
+关于 federated learning 的 privacy 保护方法有综述吗,4
+transformer 在 time series 预测上的论文有没有,4
+想找几篇关于稀疏模型训练的综述看看,4
+有没有讲 diffusion 做文本生成的论文推荐,4
+RLHF 的优化方法最近有什么新的综述啊,4
+multi-modal 学习里 fusion 策略的最新进展有吗,4
+关于 vision transformer 的改进 work 有没有汇总,4
+生成模型中 score matching 的综述求推荐,4
+想看看 adversarial training 在 ML 里的新进展呢,4
+有没有讲 neural architecture search 的论文综述,4
+关于知识蒸馏在 LLM 上的应用有推荐吗,4
+搞图神经网络的话最近有什么好的 survey 没,4
+imbalanced learning 的采样方法有新综述吗,4
+想找几篇关于 sparse attention 的改进论文,4
+有没有 explainable AI 在 ML model 里的综述推荐,4
+多任务学习里的 loss balancing 策略有 paper 吗,4
+关于 transfer learning 在 medical image 中的综述,4
+想了解下 transformer 的 memory efficient 变体,4
+有没有做 curriculum learning 优化训练的综述啊,4
+causal inference 在 ML 中的最新应用有推荐吗,4
+看看 diffusion 做语音生成的最新论文有没有,4
+最近 reinforcement learning 领域有没有啥关于 offline RL 的新综述啊,4
+RL 里 policy gradient 方法最近有什么进展没,4
+有没有讲 multi-agent RL 在游戏里应用的最新论文呢,4
+想找些关于 RL 中 exploration 策略的综述看看,4
+reward shaping 在 RL 里最近有啥新工作来着,4
+有没有做 deep RL 和 imitation learning 结合的综述推荐,4
+RL 里的 model-based 方法最近有啥突破没,4
+想找点讲 RL 在 robotics 里应用的新论文,4
+关于 RL 的 sample efficiency 问题有没有综述啊,4
+PPO 算法之后有什么改进版本的新工作呢,4
+有没有讲 hierarchical RL 最近进展的论文,4
+RL 里用 transformer 做 policy 表示的新研究有吗,4
+想了解下 multi-task RL 的最新综述,4
+有没有关于 RL 中 trust region 方法的综述啊,4
+RL 在推荐系统里应用的最新论文有哪些,4
+想找些讲 distributional RL 的新工作看看,4
+关于 safe RL 最近有什么综述推荐呢,4
+RL 里 value function approximation 的新进展有吗,4
+有没有做 RL 和 inverse RL 结合的最新论文,4
+想找点讲 meta RL 的综述来看看,4
+RL 中 soft actor-critic 算法的后续工作有啥,4
+有没有关于 RL 在 NLP 中应用的综述啊,4
+关于 RL 中的 curriculum learning 最近有新论文没,4
+想找些讲 offline RL 与 RLHF 结合的进展,4
+RL 里用 graph neural network 做 state representation 的新研究,4
+有没有做 transfer learning 在 RL 中应用的综述,4
+关于 multi-objective RL 的最新综述有吗,4
+RL 中 reward-free exploration 的新工作有哪些,4
+想找点讲 RL 在自动驾驶里应用的论文,4
+有没有关于 RL 中 regret analysis 的综述推荐,4
+有没有 robotics 领域的 sim-to-real 迁移综述啊,4
+最近 reinforcement learning 在 robot manipulation 上有什么新进展呢,4
+想找一下关于 legged locomotion 的深度强化学习论文,4
+谁有 robot grasping 的 3D 视觉最新工作推荐,4
+task and motion planning 在 robotics 里的综述有吗,4
+有没有用 diffusion models 做 robot trajectory generation 的论文啊,4
+最近 imitation learning 在 robot 控制上有什么突破来着,4
+想看看 soft robotics 的 control 方法综述,4
+human-robot interaction 里 safety 相关的论文有吗,4
+有没有 mobile robot navigation 的 end-to-end 学习工作,4
+multi-agent robotics 中的 decentralized planning 综述呢,4
+最近 neural radiance field 在 robotics perception 中的应用,4
+想找关于 quadruped robot 的 locomotion control 论文,4
+robot manipulation 里的 tactile sensing 最新综述有吗,4
+有没有 visual servoing 的深度学习改进工作啊,4
+sliding mode control 在 robotics 里的新进展呢,4
+robot 的 simultaneous localization and mapping 综述推荐一下,4
+最近 zero-shot 的 robotic skill transfer 有什么好论文,4
+想了解下 reinforcement learning 里 reward shaping 在 robot 上的应用,4
+有没有用 transformer 做 robot motion prediction 的综述,4
+robot 的 force control 结合 impedance control 的最新工作,4
+最近 hybrid robot 的 kinematic modeling 论文有吗,4
+想找 underwater robot 的 path planning 算法综述,4
+有没有 robot 的 compliant manipulation 相关综述啊,4
+robot 的 visual-language model 结合的应用论文呢,4
+最近关于 robot 的 uncertainty-aware planning 有什么进展,4
+想看看 swarm robotics 里 formation control 的新方法,4
+robot 的 whole-body control 综述有吗,4
+有没有用 graph neural networks 做 robot 的 topology 规划,4
+最近关于 robot 的 self-supervised learning 在 manipulation 中的应用,4
+transformer 里的 self-attention 是怎么从 seq2seq 的 attention 演变过来的呢,5
+bert 和 gpt 的预训练思路到底是谁先提出来的啊,5
+word2vec 到 elmo 再到 bert，词向量怎么一步步变成上下文相关的,5
+prompt tuning 和 fine-tuning 的区别是啥，它们背后都依赖哪些早期工作,5
+llm 里的 scaling law 是从哪篇论文开始讲的来着,5
+ner 任务从 crf 到 bert-crf 再到现在的 llm 怎么做，这条路是怎么走过来的,5
+beam search 和 top-k sampling 在文本生成里各是什么时候火起来的,5
+transformer 的位置编码从绝对到相对，中间有哪些关键论文,5
+text classification 以前用 cnn 后来用 bert，中间谁做了过渡工作,5
+machine translation 从 lstm 到 transformer 中间到底经历了啥,5
+chain-of-thought prompting 是直接从 few-shot 演变的吗，还是参考了别的,5
+gpt 系列从 1 到 4，每次加了什么训练技巧啊,5
+预训练加微调这个范式到底是谁正式提出来的,5
+rnn 的梯度消失问题是怎么一步步被 lstm 和 gru 解决的,5
+attention is all you need 之前，有没有人尝试过纯 attention 的模型,5
+知识蒸馏在 nlp 里最早是哪篇论文用的，后来怎么应用到 bert 上的,5
+对抗训练在 nlp 里的应用是从 fgsm 开始还是从别的论文,5
+masked language modeling 的思路是 bert 首创的还是之前就有了,5
+多任务学习在 nlp 里怎么从早期 mtl 发展到 t5 这种模式的,5
+transformer 的层归一化为啥从 post-norm 变成 pre-norm 的啊,5
+text generation 的评估指标从 perplexity 到 bleu 再到 rouge，谁先谁后,5
+zero-shot 和 few-shot learning 在 nlp 里的发展脉络是啥,5
+nerf 这种模型跟 nlp 有啥关系来着，哦不对，nerf 是视觉的,5
+llm 的 instruction tuning 是不是参考了多任务学习的论文啊,5
+sparse attention 和 longformer 这些模型是怎么解决 transformer 长序列问题的,5
+bert 和 roberta 训练上的区别，都引用了哪些前人的技巧,5
+生成式模型从 gpt 到 chatgpt 中间有哪些关键的指令调优步骤,5
+text-to-text 框架是 t5 首创的还是之前有其他工作,5
+wordpiece 和 bpe 这两种分词方法，谁先用在 nlp 里的,5
+transformer 的 decoder-only 结构是 gpt 开始用还是更早,5
+从ResNet到ViT，图像分类的backbone是怎么一步步被transformer取代的啊,5
+YOLO系列从v1到v8，每个版本到底解决了什么问题呢,5
+GAN和扩散模型，从生成质量到训练稳定性，哪个更靠谱啊,5
+语义分割从FCN到DeepLab再到MaskFormer，这些模型的内在联系是啥,5
+图像检测里的anchor-based和anchor-free，到底谁先谁后怎么演化的,5
+MobileNet和ShuffleNet这些轻量网络，它们的设计思想是怎么传承的,5
+从联邦学习到联邦视觉，这个跨领域范式是怎么一步步发展起来的,5
+目标检测中的NMS到DETR的端到端，这个去冗余的思路是怎么来的,5
+图像超分从SRCNN到GAN再到扩散模型，各个阶段核心突破是啥,5
+视觉Transformer的attention机制到底是从NLP哪篇论文里搬过来的,5
+图像增强里从直方图均衡化到Retinex到深度学习的演进路径是怎样的,5
+自监督学习在CV里从SimCLR到MAE，预训练范式是怎么变了的,5
+视频理解从两流网络到非局部网络再到TimeSformer，思路变化大不大,5
+物体检测的候选框方法从Selective Search到Faster R-CNN是怎么被淘汰的,5
+从Pix2Pix到CycleGAN再到Stable Diffusion，图像到图像翻译是怎么发展的,5
+人脸识别从Eigenfaces到ArcFace，特征表示方法经历了哪些变革,5
+点云处理从PointNet到PointNet++再到Transformer，局部特征的提取逻辑变没,5
+图像分割里的U-Net和它的变种，在医学影像任务中哪个版本最常用啊,5
+从CNN到GNN再到ViT，图结构数据在视觉里是怎么被逐步采用的,5
+图像去噪从BM3D到DnCNN到扩散模型，非学习和学习方法的优劣怎么变的,5
+视频动作识别从3D卷积到TSM再到VideoMAE，计算效率是怎么一步步优化的,5
+图像风格迁移从Gatys的优化方法到AdaIN到对比学习，风格和内容怎么解耦的,5
+从AlexNet到ResNeXt再到EfficientNet，网络深度和宽度的权衡是怎么做的,5
+视觉定位任务从region proposal到DETR的transformer，流程怎么精简的,5
+图像生成中的VAE、GAN和扩散模型，它们之间有没有继承关系啊,5
+从SIFT到SuperPoint再到LoFTR，特征匹配是怎么端到端化的,5
+图像检索从BoW到VLAD到深度学习，全局特征和局部特征怎么融合的,5
+从R-CNN到YOLO再到DETR，目标检测的pipeline是怎么一步步统一的,5
+视觉推理中的场景图生成从Graph R-CNN到ESG，关系建模有啥创新,5
+从NeRF到3D Gaussian Splatting，新视角合成是怎么从显式变隐式再变显式的,5
+从残差网络到 DenseNet 再到 EfficientNet，模型设计思路是怎么一步步演变的啊,5
+Batch Normalization 和 Layer Normalization 的提出背景有什么区别，哪个后来在 Transformer 里更受用,5
+Adam 优化器是怎么从 SGD 一步步改进过来的，中间有哪些关键工作,5
+GAN 从原始版本到 StyleGAN 的生成质量提升，中间经历了哪些重要改进,5
+Attention 机制最早在 Seq2Seq 里出现，后来怎么变成 Transformer 的基石,5
+Dropout 和 DropConnect 之间的关系是什么，后来怎么衍生出 Spatial Dropout,5
+从 AlexNet 到 ResNet，深度网络训练困难这个问题是怎么被一步步解决的,5
+强化学习里的 Q-learning 到 DQN 再到 Rainbow，每一步解决了什么痛点,5
+梯度消失问题在 RNN 里怎么被 LSTM 和 GRU 解决的，后来有没有更好的方案,5
+从 Word2Vec 到 BERT，词向量的表示方式是怎么从静态变成上下文化的,5
+YOLO 系列从 v1 到 v8，目标检测的速度和精度是怎么一步步权衡优化的,5
+聚类算法从 K-means 到 DBSCAN 再到谱聚类，适应不同数据形态的思路是什么,5
+数据增强从简单的翻转裁剪到 Mixup 和 CutMix，是怎么一步步提升泛化能力的,5
+从全连接网络到卷积网络再到图神经网络，处理非欧氏数据的动机是什么,5
+xgb 和 lightgbm 以及 catboost 这几个梯度提升框架，各自改进了哪里,5
+从玻尔兹曼机到深度信念网络再到 VAE，生成模型是怎么一步步进化的,5
+在 NLP 里，从 n-gram 到 RNN 再到 Transformer，长程依赖是怎么被逐步捕获的,5
+从 K 近邻到支持向量机再到随机森林，分类器的决策边界是怎么越来越复杂的,5
+从线性回归到 Ridge 再到 Lasso，正则化是怎么被引入来防止过拟合的,5
+从反向传播到自动微分再到目前的深度学习框架，梯度计算是怎么自动化起来的,5
+从朴素贝叶斯到贝叶斯网络再到变分推理，处理不确定性的方法是怎么变强的,5
+从 PCA 到 t-SNE 再到 UMAP，降维技术的发展是怎么兼顾全局和局部结构的,5
+从批量梯度下降到随机梯度下降再到 Adam，优化器的收敛速度是怎么提升的,5
+从循环神经网络到 Transformer，序列建模的并行化问题是怎么一步步解决的,5
+从 softmax 到稀疏 softmax 再到 Gumbel-softmax，分类输出的改进路径是怎样的,5
+从受限玻尔兹曼机到扩散模型，生成模型是怎么从隐变量进化到逐步去噪的,5
+从决策树到随机森林再到 XGBoost，集成学习的 bias-variance 平衡是怎么改善的,5
+从最大似然估计到 KL 散度再到 Wasserstein 距离，损失函数是怎么越来越鲁棒的,5
+从 LeNet 到 VGG 再到 Inception，卷积网络的深度和宽度是怎么被平衡的,5
+从 ResNet 的残差连接到 Transformer 的残差层，跳跃连接的设计思想是怎么延续的,5
+RL 里从 Q-learning 到 DQN 再到 Rainbow，这些改进是怎么一步步来的啊,5
+PPO 和 TRPO 到底有啥关系，谁先谁后来着,5
+policy gradient 后来怎么演变成 actor-critic 的，中间有哪些关键工作,5
+SAC 和 TD3 这两个算法，哪个是借鉴了对方的思路呢,5
+reward shaping 这个方法最早是谁提的，后来用在 RL 里怎么变的,5
+RL 里 exploration 策略从 epsilon-greedy 到 curiosity-driven，这条线是怎么发展的,5
+off-policy 和 on-policy 算法在历史上有哪些互相影响的工作啊,5
+从 DDPG 到 SAC，连续控制 RL 算法经历了哪些改进,5
+imitation learning 和 inverse RL 这两条线是怎么分开又交叉的,5
+multi-agent RL 里从独立 Q-learning 到 MADDPG，中间有谁做了关键连接,5
+RL 用在 robotics 里，从仿真到真实环境，有哪些论文推动了 sim-to-real,5
+hierarchical RL 从 options 到 feudal networks，演变逻辑是啥啊,5
+model-based RL 和 model-free RL 这俩流派，历史上谁先谁后，后来怎么融合的,5
+distributional RL 这个想法最早哪来的，后来怎么用到 C51 和 QR-DQN 的,5
+RL 的 exploration-exploitation trade-off，从 bandit 到 deep RL，有哪些里程碑工作,5
+从 DQN 到 Double DQN 到 Dueling DQN，这些改进是怎么一步步被提出来的,5
+RL 里 action space 从离散到连续，哪些论文是分水岭啊,5
+meta-learning 和 RL 结合，从 MAML 到 PEARL，这条线是怎么连起来的,5
+safe RL 这个方向最早是谁关注的，后来怎么发展出 constrained MDP 的,5
+RL 里 reward function 从稀疏到密集，有哪些 work 试图自动设计奖励,5
+从 vanilla policy gradient 到 natural gradient 再到 TRPO，数学上是怎么一步步深入的,5
+offline RL 和 online RL 的关系是啥，BCQ 和 CQL 之间有没有谁启发谁,5
+RL 中 value iteration 和 policy iteration 这两派，后来怎么在 deep RL 里融合的,5
+从 REINFORCE 到 A2C 到 A3C，这些算法在并行化上是怎么演进的,5
+RL 里的 eligibility traces 从 TD(lambda) 到 deep RL 里还有人在用吗,5
+curriculum learning 在 RL 里的应用，最早是谁提的，后来有哪些关键改进,5
+从 single-agent RL 到 multi-agent RL，有哪些概念是直接搬过来的,5
+RL 的 generalization 问题，从 domain randomization 到 invariance，这条线怎么发展的,5
+从 Q-learning 到 deep RL，function approximation 的稳定性问题是怎么一步步被解决的,5
+RL 里的 hindsight experience replay 是受什么启发提出的，后来有哪些变体啊,5
+波士顿动力从早期液压驱动到现在强化学习控制的演进路线是怎么走过来的啊,5
+ROS1到ROS2的迁移背后主要解决了机器人通信的那些痛点啊,5
+从PID控制到模型预测控制再到端到端学习，机器人运动控制这条技术线是怎么演变的,5
+SLAM从最早的基于滤波的方法到现在的神经隐式表示，中间关键突破有哪些,5
+机器人抓取从传统几何分析到基于视觉的大模型，这个代表性的工作是怎么一步步发展的,5
+mobile manipulation从早期单个机械臂加轮式底盘到现在全自主操作，中间有哪些里程碑工作,5
+从RRT到MPC再到learning-based planning，机器人路径规划这条路是怎么迭代的,5
+强化学习在机器人中从DQN到PPO再到分布式方法，这个演变过程中有哪些代表性论文啊,5
+从传统视觉伺服到现在的视觉语言模型引导机器人操作，这个能力是怎么一步步提升的,5
+机械臂柔顺控制从早期阻抗控制到现在力位混合学习，关键论文有哪些,5
+四足机器人从MIT的早期气动控制到当前仿生运动生成，技术路线是怎么演变的,5
+从静态避障到动态环境中的实时导航，DWA、TEB到learning-based的转变都有哪些关键工作,5
+机器人手眼标定从传统棋盘格到现在的自监督方法，相关论文的演进关系是什么样的,5
+从Gaussian Process到Neural Network再到Graph Neural Network用于机器人控制，这个路线是怎么递进的,5
+多机器人协同从集中式规划到分布式强化学习，这条线的主要论文有哪些来着,5
+从基于模型的强化学习到无模型再到离线强化学习在机器人中的应用，演变过程中的代表工作,5
+机器人自监督学习从Pathak的ICM到Curiosity再到当前基于大模型的方法，发展脉络是怎样的,5
+从CALVIN到RT-2再到开源的多任务机器人操作基准，这些工作的关系如何,5
+刚性体操作到可变形物体操作，传统方法到数据驱动方法的跨越有哪些关键论文,5
+从MPC到iLQR再到SHAC这种基于梯度的轨迹优化，在机器人中的演变是怎么样的,5
+从经典贝叶斯滤波到粒子滤波再到深度SLAM，机器人状态估计这条路怎么发展的,5
+ROS navigation stack从move_base到Nav2再到learning-based planner，版本更迭背后的动机,5
+从人类遥操作到模仿学习再到机器人自主操作，每个阶段的代表性论文有哪些,5
+从单模态传感器融合到多模态大模型用于机器人感知，这个技术线是怎么搭建的,5
+从经典控制论到端到端驾驶，自动驾驶中规划模块的演变涉及哪些关键工作,5
+机器人强化学习从仿真到sim-to-real再到直接真实世界训练，这条路线是怎么进步的,5
+从序列化任务规划到层级强化学习再到大模型驱动的任务分解，相关论文有哪些,5
+从OpenAI的dactyl到当前灵巧手操作的最新工作，机器人灵巧操作的技术演进,5
+从单一的actor-critic到基于transformer的架构在机器人策略学习中的应用演变,5
+从PR2到Stretch到TIAGo再到mobile manipulator的硬件设计演变，对应有哪些关键论文,5
