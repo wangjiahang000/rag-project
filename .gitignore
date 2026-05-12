@@ -16,15 +16,15 @@ chroma_db/
 temp/
 papers/
 uploads/
-
+last/
 # IDE
 .vscode/
 .idea/
 
-# 模型文件（不上传，太大）
-models/
+
 
 # 系统文件
 .DS_Store
 Thumbs.db
+
 

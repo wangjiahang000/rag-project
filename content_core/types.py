@@ -12,3 +12,4 @@ class TaskNode(BaseModel):
 class TaskGraph(BaseModel):
     user_tasks: List[str]            # ["retrieve", "compare"]
     nodes: List[TaskNode]            # 执行节点列表
+    entities: list = []  

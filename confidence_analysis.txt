@@ -1,0 +1,691 @@
+总查询: 249
+ONNX 模式: True
+
+=== 1. top_conf 分布 ===
+  < 0.30:   0 条 (0.0%)
+  < 0.35:   0 条 (0.0%)
+  < 0.40:   0 条 (0.0%)
+  < 0.45:   0 条 (0.0%)
+  < 0.50:   0 条 (0.0%)
+  < 0.55:   1 条 (0.4%)
+  < 0.60:   4 条 (1.6%)
+  < 0.65:  18 条 (7.2%)
+  < 0.70:  92 条 (36.9%)
+
+=== 2. top-1 / top-2 分差分布 ===
+  gap < 0.01:  79 条 (31.7%)  这个阈值会触发 LLM
+  gap < 0.02: 136 条 (54.6%)  这个阈值会触发 LLM
+  gap < 0.03: 167 条 (67.1%)  这个阈值会触发 LLM
+  gap < 0.05: 209 条 (83.9%)  这个阈值会触发 LLM
+  gap < 0.08: 242 条 (97.2%)  这个阈值会触发 LLM
+  gap < 0.10: 247 条 (99.2%)  这个阈值会触发 LLM
+  gap < 0.15: 249 条 (100.0%)  这个阈值会触发 LLM
+  gap < 0.20: 249 条 (100.0%)  这个阈值会触发 LLM
+
+=== 3. 关键词信号矛盾（规则命中但未进 tasks） ===
+  共有 10 条有关键词命中但被排除（4.0%）
+
+=== 4. 低分差(<0.05) + 关键词矛盾（最应送 LLM） ===
+  共 10 条
+  [retrieve(0.729) gap=0.019] 我想找一些LoRA的教程资源
+    rule_signals=['retrieve', 'howto'] keyword_conflict=['howto']
+  [retrieve(0.748) gap=0.022] 帮我搜搜对比学习的新进展
+    rule_signals=['compare'] keyword_conflict=['compare']
+  [summarize(0.749) gap=0.009] 给我说说整体情况怎么样
+    rule_signals=['howto'] keyword_conflict=['howto']
+  [extract(0.759) gap=0.017] 文中对比的结果数据在哪
+    rule_signals=['compare'] keyword_conflict=['compare']
+  [summarize(0.691) gap=0.000] 搜一下RAG的论文然后对比Naive和Advanced
+    rule_signals=['compare'] keyword_conflict=['compare']
+  [extract(0.767) gap=0.018] 从对比学习的论文里提取数据
+    rule_signals=['compare', 'extract'] keyword_conflict=['compare']
+  [summarize(0.709) gap=0.003] 查查GraphRAG的流程再比较一下
+    rule_signals=['compare', 'retrieve'] keyword_conflict=['compare']
+  [extract(0.724) gap=0.014] 找RLHF的论文并总结对齐方法的差异
+    rule_signals=['compare', 'summarize', 'retrieve'] keyword_conflict=['compare']
+  [retrieve(0.712) gap=0.003] 我看一下transformer的论文再比较一下CNN
+    rule_signals=['compare'] keyword_conflict=['compare']
+  [extract(0.695) gap=0.001] 对比一下GNN和Transformer用在分子预测上
+    rule_signals=['compare'] keyword_conflict=['compare']
+
+=== 5. 组合策略效果评估 ===
+  gap<0.03 or keyword_conflict: 167 条 (67.1%) 送 LLM
+  gap<0.05 or keyword_conflict: 209 条 (83.9%) 送 LLM
+  gap<0.08 or keyword_conflict: 242 条 (97.2%) 送 LLM
+  gap<0.10 or keyword_conflict: 247 条 (99.2%) 送 LLM
+
+=== 6. 分差 < 0.05 的查询 ===
+
+  [retrieve 0.665 gap=0.015] 有transformer的论文吗
+    tasks=['retrieve', 'extract', 'summarize']  rules=[]
+
+  [retrieve 0.726 gap=0.043] 帮我搜点东西呗
+    tasks=['retrieve', 'howto', 'summarize']  rules=[]
+
+  [retrieve 0.756 gap=0.016] 我想看几篇关于大模型的文章
+    tasks=['retrieve', 'summarize', 'extract']  rules=[]
+
+  [retrieve 0.750 gap=0.027] 能查一下注意力机制的资料不
+    tasks=['retrieve', 'extract', 'summarize']  rules=['retrieve']
+
+  [retrieve 0.738 gap=0.023] 最近有什么新的图神经网络文章
+    tasks=['retrieve', 'summarize', 'extract']  rules=[]
+
+  [retrieve 0.667 gap=0.022] RLHF相关的文献有吗
+    tasks=['retrieve', 'extract', 'summarize']  rules=[]
+
+  [retrieve 0.729 gap=0.019] 我想找一些LoRA的教程资源
+    tasks=['retrieve', 'extract', 'summarize']  rules=['retrieve', 'howto']
+
+  [retrieve 0.704 gap=0.004] 查查知识蒸馏是啥
+    tasks=['retrieve', 'summarize', 'reason']  rules=['retrieve']
+
+  [reason 0.695 gap=0.010] 思维链提示是个什么东西
+    tasks=['reason', 'retrieve', 'howto']  rules=[]
+
+  [retrieve 0.637 gap=0.002] MoE架构是啥呀
+    tasks=['retrieve', 'reason', 'howto']  rules=[]
+
+  [retrieve 0.733 gap=0.037] 有没有多模态相关的综述
+    tasks=['retrieve', 'summarize', 'extract']  rules=[]
+
+  [retrieve 0.748 gap=0.022] 帮我搜搜对比学习的新进展
+    tasks=['retrieve', 'summarize', 'extract']  rules=['compare']
+
+  [retrieve 0.715 gap=0.021] 我想了解一下RAG有啥好东西
+    tasks=['retrieve', 'summarize', 'reason']  rules=[]
+
+  [retrieve 0.713 gap=0.006] 咋搜论文啊
+    tasks=['retrieve', 'extract', 'summarize']  rules=[]
+
+  [retrieve 0.727 gap=0.013] 让我看看扩散模型有什么新东西
+    tasks=['retrieve', 'extract', 'summarize']  rules=[]
+
+  [retrieve 0.688 gap=0.006] 有讲模型压缩的吗
+    tasks=['retrieve', 'reason', 'extract']  rules=[]
+
+  [retrieve 0.761 gap=0.014] 能找一下量化相关的资料不
+    tasks=['retrieve', 'extract', 'summarize']  rules=['retrieve']
+
+  [retrieve 0.739 gap=0.011] 我想看看关于AI安全的最新研究
+    tasks=['retrieve', 'summarize', 'extract']  rules=[]
+
+  [retrieve 0.715 gap=0.019] 帮我查一下few-shot learning的综述
+    tasks=['retrieve', 'summarize', 'extract']  rules=['retrieve']
+
+  [retrieve 0.742 gap=0.033] 有啥推荐系统的新论文吗
+    tasks=['retrieve', 'extract', 'summarize']  rules=[]
+
+  [retrieve 0.719 gap=0.026] 帮我看看embedding相关的文章
+    tasks=['retrieve', 'summarize', 'extract']  rules=[]
+
+  [extract 0.654 gap=0.000] 有没有讲prompt tuning的
+    tasks=['extract', 'retrieve', 'reason']  rules=[]
+
+  [extract 0.739 gap=0.009] 能查查参数高效微调的文章不
+    tasks=['extract', 'summarize', 'retrieve']  rules=['extract', 'retrieve']
+
+  [retrieve 0.734 gap=0.013] 帮我搜一下长上下文模型
+    tasks=['retrieve', 'extract', 'summarize']  rules=[]
+
+  [reason 0.605 gap=0.005] CNN和Transformer谁好
+    tasks=['reason', 'compare', 'retrieve']  rules=[]
+
+  [compare 0.650 gap=0.038] LLaMA和Qwen有啥不一样
+    tasks=['compare', 'extract', 'reason']  rules=['compare']
+
+  [compare 0.626 gap=0.023] DPO和PPO哪个效果好
+    tasks=['compare', 'reason', 'extract']  rules=[]
+
+  [compare 0.572 gap=0.015] LangChain和LlamaIndex哪个好用
+    tasks=['compare', 'retrieve', 'howto']  rules=[]
+
+  [compare 0.647 gap=0.006] GPT-4o和Claude比呢
+    tasks=['compare', 'extract', 'howto']  rules=[]
+
+  [compare 0.721 gap=0.010] A方法好还是B方法好
+    tasks=['compare', 'reason', 'howto']  rules=[]
+
+  [retrieve 0.725 gap=0.004] 这两个哪个更适合我的任务
+    tasks=['retrieve', 'compare', 'summarize']  rules=['compare']
+
+  [compare 0.765 gap=0.045] 这俩方案各有啥优缺点
+    tasks=['compare', 'reason', 'summarize']  rules=[]
+
+  [howto 0.717 gap=0.001] 传统方法和深度学习方法有啥不同
+    tasks=['howto', 'reason', 'compare']  rules=['compare']
+
+  [compare 0.650 gap=0.017] CPU和GPU训练区别大吗
+    tasks=['compare', 'extract', 'reason']  rules=['compare']
+
+  [compare 0.673 gap=0.010] Lora和全量微调哪个效果好
+    tasks=['compare', 'howto', 'reason']  rules=[]
+
+  [compare 0.697 gap=0.038] 大模型和小模型选哪个
+    tasks=['compare', 'retrieve', 'howto']  rules=[]
+
+  [compare 0.600 gap=0.025] RNN和Transformer哪个快
+    tasks=['compare', 'reason', 'retrieve']  rules=[]
+
+  [compare 0.728 gap=0.024] 这两个框架你推荐哪个
+    tasks=['compare', 'retrieve', 'summarize']  rules=[]
+
+  [retrieve 0.664 gap=0.005] 哪个框架社区更活跃
+    tasks=['retrieve', 'compare', 'howto']  rules=[]
+
+  [compare 0.714 gap=0.008] 这个跟那个有什么不同啊
+    tasks=['compare', 'reason', 'retrieve']  rules=['compare']
+
+  [compare 0.700 gap=0.028] 俩东西比一下呗
+    tasks=['compare', 'summarize', 'retrieve']  rules=[]
+
+  [retrieve 0.737 gap=0.007] 帮我对比一下这两个
+    tasks=['retrieve', 'compare', 'summarize']  rules=['compare']
+
+  [compare 0.697 gap=0.038] 差距大不大
+    tasks=['compare', 'reason', 'summarize']  rules=[]
+
+  [retrieve 0.752 gap=0.010] 帮我总结一下大模型这一年有啥进展
+    tasks=['retrieve', 'summarize', 'howto']  rules=['summarize']
+
+  [summarize 0.724 gap=0.017] 归纳一下图神经网络的主要方法呗
+    tasks=['summarize', 'reason', 'retrieve']  rules=['summarize']
+
+  [summarize 0.784 gap=0.029] 把这几篇论文的核心思想给我说说
+    tasks=['summarize', 'retrieve', 'extract']  rules=[]
+
+  [retrieve 0.741 gap=0.006] 概括一下多模态学习有哪些关键技术
+    tasks=['retrieve', 'howto', 'summarize']  rules=['summarize']
+
+  [summarize 0.713 gap=0.009] 帮我梳理一下LLM评估方法
+    tasks=['summarize', 'extract', 'reason']  rules=[]
+
+  [summarize 0.779 gap=0.003] 把这些资料的主要内容说一下
+    tasks=['summarize', 'retrieve', 'extract']  rules=[]
+
+  [summarize 0.750 gap=0.005] 用几句话给我说说这篇文章
+    tasks=['summarize', 'retrieve', 'extract']  rules=[]
+
+  [summarize 0.767 gap=0.008] 整理一下对比学习的方法
+    tasks=['summarize', 'compare', 'retrieve']  rules=['compare']
+
+  [retrieve 0.681 gap=0.002] 大模型训练框架都有啥
+    tasks=['retrieve', 'howto', 'compare']  rules=[]
+
+  [retrieve 0.726 gap=0.012] 模型量化方面的成果有哪些
+    tasks=['retrieve', 'summarize', 'extract']  rules=[]
+
+  [retrieve 0.735 gap=0.013] 这篇论文主要讲了啥
+    tasks=['retrieve', 'summarize', 'extract']  rules=[]
+
+  [retrieve 0.772 gap=0.005] 帮我归纳一下这些内容
+    tasks=['retrieve', 'summarize', 'extract']  rules=['summarize']
+
+  [summarize 0.729 gap=0.017] 大概总结一下呗
+    tasks=['summarize', 'retrieve', 'reason']  rules=['summarize']
+
+  [summarize 0.765 gap=0.022] 这篇文章的核心观点是啥
+    tasks=['summarize', 'reason', 'retrieve']  rules=[]
+
+  [retrieve 0.733 gap=0.014] 能帮我提炼一下重点不
+    tasks=['retrieve', 'summarize', 'howto']  rules=[]
+
+  [compare 0.730 gap=0.004] 这几篇有啥共同点
+    tasks=['compare', 'summarize', 'retrieve']  rules=[]
+
+  [summarize 0.749 gap=0.009] 给我说说整体情况怎么样
+    tasks=['summarize', 'retrieve', 'reason']  rules=['howto']
+
+  [reason 0.728 gap=0.014] 发展脉络是什么样的
+    tasks=['reason', 'howto', 'retrieve']  rules=[]
+
+  [summarize 0.744 gap=0.009] 目前的研究热点是啥
+    tasks=['summarize', 'retrieve', 'reason']  rules=[]
+
+  [retrieve 0.780 gap=0.011] 帮我捋一捋这方面的研究
+    tasks=['retrieve', 'summarize', 'reason']  rules=[]
+
+  [howto 0.641 gap=0.004] 咋用PyTorch写Transformer啊
+    tasks=['howto', 'extract', 'reason']  rules=[]
+
+  [howto 0.688 gap=0.018] 怎么部署LLM到生产环境
+    tasks=['howto', 'extract', 'reason']  rules=['howto']
+
+  [howto 0.700 gap=0.040] 教我怎么搭一个RAG系统
+    tasks=['howto', 'summarize', 'extract']  rules=['howto']
+
+  [howto 0.667 gap=0.002] LangChain里怎么加自定义模型
+    tasks=['howto', 'extract', 'retrieve']  rules=['retrieve', 'howto']
+
+  [howto 0.673 gap=0.001] 咋用vLLM部署模型啊
+    tasks=['howto', 'extract', 'retrieve']  rules=['howto']
+
+  [howto 0.662 gap=0.022] 微调LLaMA需要啥配置
+    tasks=['howto', 'extract', 'reason']  rules=['howto']
+
+  [howto 0.668 gap=0.004] 怎么在本地跑Qwen模型
+    tasks=['howto', 'retrieve', 'extract']  rules=['howto']
+
+  [howto 0.650 gap=0.047] HuggingFace的Trainer怎么用
+    tasks=['howto', 'extract', 'retrieve']  rules=['howto']
+
+  [howto 0.676 gap=0.018] LoRA微调的步骤是啥
+    tasks=['howto', 'reason', 'extract']  rules=['howto']
+
+  [extract 0.678 gap=0.003] 怎么把模型转成ONNX格式
+    tasks=['extract', 'howto', 'retrieve']  rules=['howto']
+
+  [howto 0.744 gap=0.024] 这个具体咋实现啊
+    tasks=['howto', 'reason', 'retrieve']  rules=['howto']
+
+  [retrieve 0.732 gap=0.014] 能给我个例子看看不
+    tasks=['retrieve', 'howto', 'reason']  rules=[]
+
+  [howto 0.681 gap=0.024] 一步一步教教我呗
+    tasks=['howto', 'summarize', 'retrieve']  rules=[]
+
+  [howto 0.770 gap=0.036] 开发的时候应该注意啥
+    tasks=['howto', 'retrieve', 'reason']  rules=[]
+
+  [reason 0.709 gap=0.007] 能不能跑起来看看效果
+    tasks=['reason', 'compare', 'retrieve']  rules=[]
+
+  [howto 0.740 gap=0.000] 教我一下怎么操作
+    tasks=['howto', 'retrieve', 'reason']  rules=['howto']
+
+  [howto 0.723 gap=0.050] 能贴个代码示例吗
+    tasks=['howto', 'extract', 'retrieve']  rules=[]
+
+  [howto 0.728 gap=0.042] 具体怎么做呀
+    tasks=['howto', 'reason', 'retrieve']  rules=['howto']
+
+  [howto 0.736 gap=0.031] 动手试试的话从哪里开始
+    tasks=['howto', 'reason', 'retrieve']  rules=[]
+
+  [reason 0.595 gap=0.006] 为啥Transformer比RNN好啊
+    tasks=['reason', 'compare', 'retrieve']  rules=[]
+
+  [reason 0.694 gap=0.003] 模型过拟合是啥原因
+    tasks=['reason', 'howto', 'compare']  rules=['reason']
+
+  [reason 0.681 gap=0.045] Batchnorm的原理是啥
+    tasks=['reason', 'retrieve', 'extract']  rules=['reason']
+
+  [reason 0.688 gap=0.021] 大模型为啥会有幻觉
+    tasks=['reason', 'compare', 'extract']  rules=[]
+
+  [compare 0.635 gap=0.000] RLHF为啥能让模型变好
+    tasks=['compare', 'reason', 'extract']  rules=[]
+
+  [reason 0.602 gap=0.008] 为啥说Mamba能替代Transformer
+    tasks=['reason', 'extract', 'retrieve']  rules=[]
+
+  [reason 0.699 gap=0.010] 多头注意力为什么管用
+    tasks=['reason', 'retrieve', 'howto']  rules=['reason']
+
+  [howto 0.720 gap=0.026] 位置编码是干啥的
+    tasks=['howto', 'reason', 'extract']  rules=[]
+
+  [reason 0.714 gap=0.032] 梯度消失是咋产生的
+    tasks=['reason', 'howto', 'extract']  rules=[]
+
+  [reason 0.660 gap=0.020] 为啥要加normalization
+    tasks=['reason', 'retrieve', 'howto']  rules=[]
+
+  [reason 0.741 gap=0.007] 原理是啥给我讲讲
+    tasks=['reason', 'retrieve', 'howto']  rules=['reason']
+
+  [reason 0.755 gap=0.045] 有啥理论依据吗
+    tasks=['reason', 'retrieve', 'summarize']  rules=[]
+
+  [extract 0.786 gap=0.034] 从这段话里把数据给我提出来
+    tasks=['extract', 'summarize', 'retrieve']  rules=[]
+
+  [extract 0.729 gap=0.003] 这篇论文的实验结果是多少
+    tasks=['extract', 'retrieve', 'reason']  rules=['extract']
+
+  [extract 0.768 gap=0.021] 文章里提到的参数有哪些
+    tasks=['extract', 'reason', 'summarize']  rules=['extract']
+
+  [extract 0.722 gap=0.002] 帮我查查准确率是多少
+    tasks=['extract', 'retrieve', 'reason']  rules=['extract', 'retrieve']
+
+  [extract 0.749 gap=0.032] 具体的性能指标有哪些
+    tasks=['extract', 'howto', 'reason']  rules=['extract']
+
+  [extract 0.773 gap=0.030] 把关键数据提取出来
+    tasks=['extract', 'summarize', 'retrieve']  rules=['extract']
+
+  [extract 0.741 gap=0.017] 这个实验用了啥数据集
+    tasks=['extract', 'retrieve', 'howto']  rules=[]
+
+  [extract 0.724 gap=0.029] 数值信息在哪儿
+    tasks=['extract', 'reason', 'retrieve']  rules=['extract']
+
+  [extract 0.759 gap=0.025] 把技术指标找出来
+    tasks=['extract', 'retrieve', 'summarize']  rules=['extract', 'retrieve']
+
+  [extract 0.766 gap=0.020] 这里面提到的数据有哪些
+    tasks=['extract', 'reason', 'summarize']  rules=[]
+
+  [extract 0.759 gap=0.017] 文中对比的结果数据在哪
+    tasks=['extract', 'reason', 'summarize']  rules=['compare']
+
+  [extract 0.776 gap=0.029] 从论文里找找关键参数
+    tasks=['extract', 'summarize', 'retrieve']  rules=['extract', 'retrieve']
+
+  [extract 0.726 gap=0.030] 指标得分是多少
+    tasks=['extract', 'reason', 'howto']  rules=['extract']
+
+  [extract 0.722 gap=0.041] 训练用了多少数据
+    tasks=['extract', 'retrieve', 'reason']  rules=['extract']
+
+  [retrieve 0.695 gap=0.002] 帮我查查BERT和GPT有啥区别再总结一下
+    tasks=['retrieve', 'compare', 'summarize']  rules=['compare', 'summarize', 'retrieve']
+
+  [reason 0.722 gap=0.019] LoRA的原理是啥帮我总结核心思想
+    tasks=['reason', 'summarize', 'retrieve']  rules=['summarize', 'reason']
+
+  [summarize 0.691 gap=0.000] 搜一下RAG的论文然后对比Naive和Advanced
+    tasks=['summarize', 'retrieve', 'extract']  rules=['compare']
+
+  [reason 0.692 gap=0.016] 大模型为啥有幻觉怎么解决
+    tasks=['reason', 'howto', 'compare']  rules=['howto']
+
+  [extract 0.767 gap=0.018] 从对比学习的论文里提取数据
+    tasks=['extract', 'summarize', 'retrieve']  rules=['compare', 'extract']
+
+  [summarize 0.722 gap=0.013] 总结RAG方案并对比优缺点
+    tasks=['summarize', 'extract', 'compare']  rules=['compare', 'summarize']
+
+  [summarize 0.742 gap=0.008] 找模型压缩的综述归纳一下
+    tasks=['summarize', 'extract', 'retrieve']  rules=['summarize', 'retrieve']
+
+  [summarize 0.709 gap=0.003] 查查GraphRAG的流程再比较一下
+    tasks=['summarize', 'retrieve', 'extract']  rules=['compare', 'retrieve']
+
+  [compare 0.650 gap=0.018] MoE是啥跟Dense模型有啥区别
+    tasks=['compare', 'reason', 'retrieve']  rules=['compare']
+
+  [compare 0.719 gap=0.022] 搜最新的Agent框架对比一下优缺点
+    tasks=['compare', 'retrieve', 'summarize']  rules=['compare']
+
+  [extract 0.724 gap=0.014] 找RLHF的论文并总结对齐方法的差异
+    tasks=['extract', 'retrieve', 'summarize']  rules=['compare', 'summarize', 'retrieve']
+
+  [retrieve 0.712 gap=0.003] 我看一下transformer的论文再比较一下CNN
+    tasks=['retrieve', 'summarize', 'extract']  rules=['compare']
+
+  [retrieve 0.707 gap=0.005] 帮我查查LoRA的原理再告诉我怎么用
+    tasks=['retrieve', 'howto', 'reason']  rules=['retrieve', 'howto', 'reason']
+
+  [reason 0.739 gap=0.010] 搜一下微调方法比较一下效果
+    tasks=['reason', 'compare', 'summarize']  rules=['compare']
+
+  [summarize 0.726 gap=0.014] 看看MoE的进展总结一下
+    tasks=['summarize', 'retrieve', 'extract']  rules=['summarize']
+
+  [retrieve 0.685 gap=0.010] 那篇transformer的文章有吗
+    tasks=['retrieve', 'extract', 'summarize']  rules=[]
+
+  [retrieve 0.752 gap=0.048] 帮我瞅瞅有啥好论文
+    tasks=['retrieve', 'summarize', 'extract']  rules=[]
+
+  [retrieve 0.714 gap=0.001] 你给我讲讲咋回事
+    tasks=['retrieve', 'reason', 'howto']  rules=[]
+
+  [summarize 0.725 gap=0.016] 总结一下呗简单说两句就行
+    tasks=['summarize', 'reason', 'retrieve']  rules=['summarize']
+
+  [howto 0.727 gap=0.035] 这咋实现啊
+    tasks=['howto', 'reason', 'retrieve']  rules=['howto']
+
+  [reason 0.702 gap=0.000] 怎么弄啊这个
+    tasks=['reason', 'howto', 'retrieve']  rules=['howto']
+
+  [extract 0.720 gap=0.014] 数据在哪找啊
+    tasks=['extract', 'retrieve', 'howto']  rules=['retrieve']
+
+  [retrieve 0.739 gap=0.026] 你看过这篇没讲的啥
+    tasks=['retrieve', 'reason', 'summarize']  rules=[]
+
+  [compare 0.695 gap=0.016] 这模型行不行啊
+    tasks=['compare', 'retrieve', 'reason']  rules=[]
+
+  [retrieve 0.720 gap=0.040] 能给我讲讲不
+    tasks=['retrieve', 'howto', 'reason']  rules=[]
+
+  [reason 0.687 gap=0.006] 你觉得哪个好
+    tasks=['reason', 'compare', 'retrieve']  rules=[]
+
+  [retrieve 0.745 gap=0.041] 帮我提炼一下
+    tasks=['retrieve', 'summarize', 'howto']  rules=[]
+
+  [reason 0.719 gap=0.012] 这段说啥呢
+    tasks=['reason', 'summarize', 'retrieve']  rules=[]
+
+  [extract 0.707 gap=0.008] 这数字在哪写着
+    tasks=['extract', 'reason', 'retrieve']  rules=[]
+
+  [extract 0.696 gap=0.005] 数量有多少
+    tasks=['extract', 'reason', 'retrieve']  rules=['extract']
+
+  [reason 0.734 gap=0.042] 道理我都懂就是为啥呢
+    tasks=['reason', 'summarize', 'retrieve']  rules=[]
+
+  [retrieve 0.720 gap=0.033] 帮我捋一捋
+    tasks=['retrieve', 'summarize', 'reason']  rules=[]
+
+  [retrieve 0.657 gap=0.020] 搜点东西呗大哥
+    tasks=['retrieve', 'howto', 'summarize']  rules=[]
+
+  [retrieve 0.729 gap=0.039] 有没有懂的给我说说
+    tasks=['retrieve', 'howto', 'reason']  rules=[]
+
+  [retrieve 0.719 gap=0.004] 弱弱问一句这个是啥
+    tasks=['retrieve', 'reason', 'summarize']  rules=[]
+
+  [reason 0.726 gap=0.011] 我不太明白这个能讲讲吗
+    tasks=['reason', 'retrieve', 'summarize']  rules=[]
+
+  [retrieve 0.740 gap=0.020] 帮我看看这篇paper主要干了啥
+    tasks=['retrieve', 'summarize', 'extract']  rules=[]
+
+  [reason 0.699 gap=0.001] 这东西靠谱吗
+    tasks=['reason', 'retrieve', 'howto']  rules=[]
+
+  [retrieve 0.649 gap=0.004] 有啥坑没
+    tasks=['retrieve', 'reason', 'summarize']  rules=[]
+
+  [reason 0.736 gap=0.016] 整不明白啊帮我解释一下
+    tasks=['reason', 'retrieve', 'summarize']  rules=[]
+
+  [howto 0.722 gap=0.013] 有没有简单的方法
+    tasks=['howto', 'retrieve', 'reason']  rules=[]
+
+  [retrieve 0.735 gap=0.032] 推荐一篇文章给我呗
+    tasks=['retrieve', 'summarize', 'howto']  rules=[]
+
+  [retrieve 0.674 gap=0.001] 我该从哪看起
+    tasks=['retrieve', 'howto', 'reason']  rules=[]
+
+  [reason 0.717 gap=0.019] 这东西跟那个是不是一回事
+    tasks=['reason', 'compare', 'retrieve']  rules=[]
+
+  [compare 0.685 gap=0.011] 哪个更靠谱一点
+    tasks=['compare', 'reason', 'retrieve']  rules=['compare']
+
+  [retrieve 0.691 gap=0.002] 能不能说得简单点
+    tasks=['retrieve', 'reason', 'summarize']  rules=[]
+
+  [summarize 0.710 gap=0.002] 太长了说重点
+    tasks=['summarize', 'retrieve', 'reason']  rules=[]
+
+  [reason 0.710 gap=0.004] 直接告诉我结论就行
+    tasks=['reason', 'extract', 'retrieve']  rules=[]
+
+  [howto 0.708 gap=0.001] 有没有更简单的办法
+    tasks=['howto', 'reason', 'retrieve']  rules=[]
+
+  [retrieve 0.701 gap=0.012] 这东西值不值得学
+    tasks=['retrieve', 'howto', 'reason']  rules=[]
+
+  [retrieve 0.550 gap=0.003] Transformer
+    tasks=['retrieve', 'extract', 'reason']  rules=[]
+
+  [summarize 0.736 gap=0.011] 总结一下
+    tasks=['summarize', 'retrieve', 'reason']  rules=['summarize']
+
+  [compare 0.706 gap=0.048] 区别在哪
+    tasks=['compare', 'reason', 'howto']  rules=['compare']
+
+  [retrieve 0.702 gap=0.013] 查论文
+    tasks=['retrieve', 'extract', 'summarize']  rules=['retrieve']
+
+  [reason 0.703 gap=0.042] 原理
+    tasks=['reason', 'retrieve', 'howto']  rules=['reason']
+
+  [retrieve 0.694 gap=0.001] 最新进展
+    tasks=['retrieve', 'summarize', 'extract']  rules=[]
+
+  [retrieve 0.712 gap=0.019] 详细说说
+    tasks=['retrieve', 'howto', 'reason']  rules=[]
+
+  [retrieve 0.695 gap=0.011] 简单说
+    tasks=['retrieve', 'summarize', 'reason']  rules=[]
+
+  [howto 0.684 gap=0.003] 举个例子
+    tasks=['howto', 'retrieve', 'extract']  rules=[]
+
+  [retrieve 0.711 gap=0.030] 有论文吗
+    tasks=['retrieve', 'extract', 'summarize']  rules=[]
+
+  [compare 0.710 gap=0.032] 比较一下
+    tasks=['compare', 'summarize', 'retrieve']  rules=['compare']
+
+  [summarize 0.650 gap=0.042] 归纳
+    tasks=['summarize', 'howto', 'extract']  rules=['summarize']
+
+  [reason 0.746 gap=0.046] 什么情况
+    tasks=['reason', 'retrieve', 'howto']  rules=[]
+
+  [reason 0.701 gap=0.007] 怎么办
+    tasks=['reason', 'howto', 'retrieve']  rules=['howto']
+
+  [howto 0.650 gap=0.025] YOLOv8和YOLOv5比怎么样
+    tasks=['howto', 'compare', 'extract']  rules=['howto']
+
+  [reason 0.634 gap=0.013] PyTorch 2.0的新特性是啥
+    tasks=['reason', 'retrieve', 'extract']  rules=[]
+
+  [howto 0.650 gap=0.016] HuggingFace hub怎么上传模型
+    tasks=['howto', 'extract', 'compare']  rules=['howto']
+
+  [compare 0.617 gap=0.009] SDXL和SD1.5哪个好
+    tasks=['compare', 'extract', 'howto']  rules=[]
+
+  [howto 0.650 gap=0.047] DeepSpeed怎么配置
+    tasks=['howto', 'reason', 'retrieve']  rules=['howto']
+
+  [howto 0.654 gap=0.025] Kubernetes部署模型怎么搞
+    tasks=['howto', 'retrieve', 'extract']  rules=['howto']
+
+  [compare 0.631 gap=0.026] Airflow和Prefect哪个好
+    tasks=['compare', 'howto', 'retrieve']  rules=[]
+
+  [compare 0.630 gap=0.004] milvus和weaviate向量库哪个快
+    tasks=['compare', 'extract', 'retrieve']  rules=[]
+
+  [retrieve 0.620 gap=0.002] Kafka和RabbitMQ哪个做消息队列好
+    tasks=['retrieve', 'compare', 'extract']  rules=[]
+
+  [howto 0.691 gap=0.047] 怎么用Docker部署模型
+    tasks=['howto', 'extract', 'retrieve']  rules=['howto']
+
+  [howto 0.650 gap=0.038] NVIDIA的TensorRT怎么用
+    tasks=['howto', 'extract', 'reason']  rules=['howto']
+
+  [howto 0.679 gap=0.000] Intel的OpenVINO怎么转换模型
+    tasks=['howto', 'retrieve', 'extract']  rules=['howto']
+
+  [howto 0.650 gap=0.033] ONNX Runtime怎么调优
+    tasks=['howto', 'extract', 'retrieve']  rules=['howto']
+
+  [howto 0.692 gap=0.026] 怎么在AWS上部署大模型
+    tasks=['howto', 'extract', 'retrieve']  rules=['howto']
+
+  [compare 0.583 gap=0.032] LangSmith和LangFuse哪个好
+    tasks=['compare', 'retrieve', 'summarize']  rules=[]
+
+  [howto 0.650 gap=0.032] W&B和MLflow怎么选
+    tasks=['howto', 'compare', 'reason']  rules=['howto']
+
+  [howto 0.650 gap=0.037] HuggingFace的AutoModel怎么用
+    tasks=['howto', 'compare', 'extract']  rules=['howto']
+
+  [retrieve 0.729 gap=0.019] NLP领域最近有什么好文章
+    tasks=['retrieve', 'summarize', 'extract']  rules=[]
+
+  [retrieve 0.694 gap=0.018] CV领域的新模型有哪些
+    tasks=['retrieve', 'howto', 'reason']  rules=[]
+
+  [retrieve 0.722 gap=0.003] 推荐系统有什么新进展
+    tasks=['retrieve', 'summarize', 'reason']  rules=[]
+
+  [retrieve 0.718 gap=0.028] 搜一下医疗AI的论文
+    tasks=['retrieve', 'summarize', 'extract']  rules=[]
+
+  [howto 0.659 gap=0.017] 金融风控用什么模型好
+    tasks=['howto', 'retrieve', 'compare']  rules=[]
+
+  [retrieve 0.656 gap=0.011] 自动驾驶里面的transformer应用
+    tasks=['retrieve', 'reason', 'howto']  rules=[]
+
+  [summarize 0.730 gap=0.011] 强化学习的最新进展
+    tasks=['summarize', 'retrieve', 'extract']  rules=[]
+
+  [howto 0.682 gap=0.002] 图神经网络在生产环境有用吗
+    tasks=['howto', 'reason', 'extract']  rules=[]
+
+  [reason 0.728 gap=0.001] 知识图谱构建有什么新方法
+    tasks=['reason', 'extract', 'retrieve']  rules=[]
+
+  [retrieve 0.678 gap=0.016] AI Agent最近有什么突破
+    tasks=['retrieve', 'summarize', 'reason']  rules=[]
+
+  [extract 0.704 gap=0.001] 扩散模型在图像生成之外的应用
+    tasks=['extract', 'howto', 'retrieve']  rules=[]
+
+  [extract 0.695 gap=0.001] 对比一下GNN和Transformer用在分子预测上
+    tasks=['extract', 'reason', 'summarize']  rules=['compare']
+
+  [howto 0.692 gap=0.003] 大模型在垂直行业的落地案例
+    tasks=['howto', 'retrieve', 'extract']  rules=[]
+
+  [howto 0.711 gap=0.006] 边缘部署模型有什么好方案
+    tasks=['howto', 'retrieve', 'extract']  rules=['howto']
+
+  [reason 0.730 gap=0.007] 小样本学习在实际应用中效果如何
+    tasks=['reason', 'howto', 'extract']  rules=['howto']
+
+  [extract 0.731 gap=0.011] 数据增强有什么新方法
+    tasks=['extract', 'reason', 'retrieve']  rules=[]
+
+  [compare 0.767 gap=0.030] 对比一下不同的注意力机制
+    tasks=['compare', 'summarize', 'retrieve']  rules=['compare']
+
+  [extract 0.697 gap=0.019] 模型蒸馏的最佳实践
+    tasks=['extract', 'howto', 'retrieve']  rules=[]
+
+  [summarize 0.712 gap=0.004] 联邦学习的最新进展
+    tasks=['summarize', 'retrieve', 'extract']  rules=[]
+
+  [compare 0.710 gap=0.008] 多模态对齐的最新方法
+    tasks=['compare', 'reason', 'retrieve']  rules=[]
+
+=== 7. 高置信度(>0.65)但疑似误判 ===
+  [retrieve   (0.667) gap=0.022] exp=reason     → RLHF相关的文献有吗
+  [compare    (0.650) gap=0.062] exp=reason     → SFT跟RLHF有啥区别
+  [howto      (0.717) gap=0.001] exp=compare    → 传统方法和深度学习方法有啥不同
+  [howto      (0.720) gap=0.026] exp=reason     → 位置编码是干啥的
+  [extract    (0.724) gap=0.014] exp=reason     → 找RLHF的论文并总结对齐方法的差异
