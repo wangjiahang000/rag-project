@@ -1,0 +1,402 @@
+GraphGenerator 设计文档
+1. 模块概述
+GraphGenerator 是 RAG Agent 的核心模块，负责将用户意图 映射为可执行任务图（TaskGraph）。
+设计理念：
+离线、零延迟：使用预设模板映射，无需调用 LLM 动态规划。
+可预测、可调试：相同意图组合总是生成相同任务图。
+易扩展：新增意图或工具链只需修改配置或添加分支。
+2. 输入与输出（按实际输出来）
+输入（来自 TaskRouter.route() 返回的字典）：
+字段
+类型
+说明
+user_tasks
+List[str]
+意图标签列表，如 ["retrieve", "compare"]
+query
+str
+用户原始自然语言问题
+resource_hint
+str
+可选资源类型提示（paper/doc/code/kg），当前未使用
+entities
+List[str]
+问题中提取的关键实体
+complexity
+str
+复杂度标记（single_step/multi_step），当前未使用
+输出：TaskGraph 实例，包含：
+user_tasks：输入意图列表
+nodes：TaskNode 列表，每个节点包含：
+id：字符串序号
+op：调用的工具名
+args：工具参数
+depends_on：前置节点 ID 列表
+3. 意图组合 → 工具链映射
+3.1 单意图
+意图
+工具链
+实体要求
+降级策略
+retrieve
+hybrid_search → rerank
+无
+无
+compare
+hybrid_search(A)‖hybrid_search(B) → rerank×2 → compare
+≥2 实体
+实体不足 → retrieve
+summarize
+hybrid_search → rerank → summarize
+无
+无
+howto
+hybrid_search → rerank
+无
+无
+reason
+hybrid_search → rerank → reason
+无
+无
+extract
+hybrid_search → rerank → extract
+无
+无
+3.2 双意图
+组合
+工具链
+说明
+retrieve + summarize
+hybrid_search → rerank → summarize
+同 summarize 链路
+retrieve + compare
+compare 链路
+依赖实体拆解
+retrieve + extract
+extract 链路
+-
+retrieve + reason
+reason 链路
+-
+retrieve + howto
+retrieve 链路
+无专属工具
+compare + reason
+compare 链路 → reason
+先执行 compare，再 reason
+extract + compare
+extract 链路 → compare
+可用于数值对比
+3.3 三意图
+组合
+工具链
+说明
+retrieve + summarize + compare
+summarize 链路 → compare
+用 summarize 结果进行对比
+retrieve + extract + compare
+extract 链路 → compare
+-
+retrieve + reason + summarize
+reason 链路 → summarize
+推理结论归纳
+retrieve + compare + reason
+compare 链路 → reason
+
+若是未定义策略，你先留出空位，等我想出具体操作方案时候再加入。
+
+4. 降级策略
+降级原因
+触发条件
+降级结果
+备注
+实体不足
+compare 系列，entities < 2
+hybrid_search → rerank
+保证链路可执行
+组合未定义
+未在映射表
+hybrid_search → rerank
+支持四意图以上或新组合
+工具不可用
+GraphExecutor 执行时发现
+Executor 回退处理
+运行时处理
+5. 核心方法
+方法
+参数
+返回值
+描述
+generate(user_tasks, query, entities=[])
+user_tasks: List[str]  query: str  entities: List[str]
+TaskGraph
+主入口，根据意图组合生成 TaskGraph
+_simple_search(query, k=10)
+query: str  k: int
+List[TaskNode]
+生成“检索 → 重排序”两节点链
+_search_rerank_then(tool, query, k=10)
+tool: str  query: str  k: int
+List[TaskNode]
+生成“检索 → 重排序 → 指定工具”三节点链
+_compare_chain(query, entities)
+query: str  entities: List[str]
+List[TaskNode]
+并行检索 ×2 → rerank ×2 → compare
+6. 使用示例
+Python
+from content_core.graph_generator import GraphGenerator
+
+generator = GraphGenerator()
+
+# 单意图检索
+graph = generator.generate(["retrieve"], "找几篇RAG论文")
+# → 节点: hybrid_search → rerank
+
+# 比较意图
+graph = generator.generate(["compare"], "LoRA和QLoRA区别", entities=["LoRA","QLoRA"])
+# → 节点: 并行 hybrid_search ×2 → rerank ×2 → compare
+
+# 复合意图
+graph = generator.generate(["retrieve","summarize"], "总结多模态进展")
+# → 节点: hybrid_search → rerank → summarize
+7. 扩展指南
+新增意图组合
+在 generate() 方法中添加 elif sorted_tasks == (...,) 分支
+返回对应 TaskNode 列表即可
+新增工具节点
+使用 TaskNode(id, op, args, depends_on) 构造
+明确依赖关系，便于 GraphExecutor 调度
+建议
+按照意图优先级排列分支，避免组合冲突
+支持动态参数（k、rerank策略）以便调优
+可结合可视化工具输出 TaskGraph，方便调试
+
+%% GraphGenerator 完整执行流程
+%% 包含单意图、compare、多意图
+
+flowchart TD
+    %% ---------- 单意图 ----------
+    subgraph SingleIntent["单意图流程"]
+        A1[User Query] --> B1[hybrid_search]
+        B1 --> C1[rerank]
+        C1 --> D1[Optional Tool Node<br/>(summarize / reason / extract / none)]
+    end
+
+    %% ---------- compare 单意图 ----------
+    subgraph CompareIntent["Compare 单意图流程"]
+        A2[User Query] --> B2[hybrid_search A]
+        A2 --> C2[hybrid_search B]
+        B2 --> D2[rerank A]
+        C2 --> E2[rerank B]
+        D2 --> F2[compare]
+        E2 --> F2
+        %% 实体不足降级
+        G2[Entities < 2?] -->|Yes| H2[hybrid_search → rerank (降级)]
+        G2 -->|No| F2
+    end
+
+    %% ---------- 双/三意图复合链 ----------
+    subgraph MultiIntent["多意图复合流程"]
+        A3[User Query] --> B3[hybrid_search]
+        B3 --> C3[rerank]
+        C3 --> D3[summarize]
+        D3 --> E3[compare]
+        %% 可以继续追加 reason 或 extract
+        E3 --> F3[reason / extract (可选)]
+    end
+
+
+    %% ---------- 连接关系说明 ----------
+    %% 为了便于阅读，不连实际节点，只作逻辑展示
+    style SingleIntent fill:#f9f,stroke:#333,stroke-width:1px
+    style CompareIntent fill:#9f,stroke:#333,stroke-width:1px
+    style MultiIntent fill:#99f,stroke:#333,stroke-width:1px
+
+
+    %% 备注
+    %% - SingleIntent: 单意图，如 retrieve、summarize、howto、reason、extract
+    %% - CompareIntent: compare 单意图，需实体 >=2，否则降级
+    %% - MultiIntent: 双意图或三意图组合，如 retrieve+summarize+compare
+
+
+================================================================================
+剩余优化项（6 个未解决问题，每项多个方案）
+================================================================================
+
+
+1. entities 永远为空，compare 链路永远降级
+─────────────────────────────────────────
+问题：route() 返回 entities: []，_build_compare 需要 ≥2 个实体才能
+走 compare 链，否则降级为 simple_search。实际效果是所有 compare 意图
+都不会执行 compare 工具，只是搜一下文档。
+
+方案 A：route() 里用 LLM 兜底时一并提取实体
+  在 _llm_fallback 的 prompt 中加入实体提取，JSON 输出增加 entities 字段：
+  {
+    "tasks": ["compare", "retrieve"],
+    "entities": ["LoRA", "QLoRA"],
+    "confidence": 0.9
+  }
+  优点：实体精准，与意图识别一次完成
+  缺点：LLM prompt 变复杂，多了一个解析字段
+
+方案 B：task_router.py 加独立的实体抽取（重新实现 _extract_entities）
+  在 route() 里加一个轻量级实体抽取步骤，不依赖 LLM：
+  - 英文：按句法模式抽（"A vs B"、"A和B的区别"）
+  - 中文：按 "和/与/跟" 连接的 2-4 字短语
+  优点：零成本，不增加 LLM 调用
+  缺点：抽取质量有限，长尾情况不准
+
+方案 C：graph_generator 的 _build_compare 在实体不足时调一次 LLM 做实体识别
+  当 len(entities) < 2 且意图包含 compare 时，调 LLM：
+  "从问题"X和Y有什么区别"中提取要对比的两个实体，返回 JSON"
+  只在这种边缘情况多一次 LLM 调用
+  优点：只在需要时调，不影响正常流程
+  缺点：多了条件判断，逻辑变复杂
+
+方案 D：直接改 _build_compare，不自作聪明降级
+  当 entities < 2 时，把整个 query 作为搜索词，搜出来的结果
+  按文档分两组（前一半 vs 后一半）做对比，至少让 compare 跑起来
+  优点：简单粗暴，不会静默降级
+  缺点：对比质量靠运气，文档天然分成两组没有语义保证
+
+
+2. _resource_hint 定义了但没人调用
+─────────────────────────────────────
+问题：task_router.py 第 88 行的 _resource_hint() 能识别 paper/code/kg，
+但 route() 没调用它，graph_generator 永远收到 resource_hint="doc"。
+
+方案 A：route() 正常分支调用并返回 resource_hint
+  resource_hint = self._resource_hint(query)
+  加到 route() 返回值中，chitchat 和正常分支统一字段
+  优点：改动最小，立竿见影
+  缺点：当前 GraphGenerator 的 TEMPLATES 实际上也没用 resource_hint
+
+方案 B：删除 _resource_hint，消灭死代码
+  如果短期内用不到，不如直接删掉，减少维护负担
+  优点：干净
+  缺点：以后要加得重新写
+
+方案 C：删除 _resource_hint，把资源识别合并到 LLM 兜底的 prompt 中
+  在 _llm_fallback 的 JSON 输出里增加 resource_hint 字段
+  "resource_hint": "paper" / "code" / "kg" / "doc"
+  优点：LLM 识别更准确
+  缺点：增加 LLM prompt 复杂度
+
+
+3. 工具 LLM 调用没有容错
+─────────────────────────
+问题：compare.py、summarize.py、extract.py、reason.py 直接调 litellm，
+没有 try/except，没有重试，没有 timeout。DeepSeek 出错会冒到
+GraphExecutor 被 catch 成 "[执行错误]" 字符串，不重试。
+
+方案 A：每个工具内部加 try/except + 重试
+  每个 tool 函数自己包 retry 逻辑（参考 task_router 的 _llm_fallback）
+  优点：每个工具自治，错误不影响其他工具
+  缺点：4 个文件重复代码
+
+方案 B：写一个通用 retry 装饰器
+  def llm_retry(func):
+      def wrapper(*args, **kwargs):
+          for attempt in range(1 + cfg.LLM_RETRY_COUNT):
+              try:
+                  return func(*args, **kwargs)
+              except Exception as e:
+                  ...
+          return ""
+      return wrapper
+
+  然后 @llm_retry 装饰每个工具函数
+  优点：不重复代码，改一处全局生效
+  缺点：装饰器对调用方透明，错误信息丢失
+
+方案 C：在 GraphExecutor 层统一重试
+  修改 graph_executor.py 的 execute()，当工具执行失败时自动重试
+  优点：改一处，对所有工具生效
+  缺点：重试粒度粗，不知道是工具内部错了还是 LLM 超时
+
+方案 D：直接不管，等到 DeepSeek 真超时了再说
+  当前错误会被 catch 成 "[执行错误]" 字符串返回给用户
+  优点：不崩，用户能看到错误提示
+  缺点：体验差，用户收到一段错误文本而不是答案
+
+
+4. _build_extract_compare 把同一份结果传给 docs_a 和 docs_b
+─────────────────────────────────────────────────────────────
+问题：extract+compare 链路的最后一步，compare 的 docs_a 和 docs_b
+指向同一个 extract 结果，两个输入一样，对比没有意义。
+
+方案 A：改为调用两次 extract 分别提取两个实体的信息，再对比
+  hybrid_search(entity_A) → rerank → extract(target=entity_A)
+  hybrid_search(entity_B) → rerank → extract(target=entity_B)
+  compare(extract_A, extract_B)
+  优点：逻辑正确，两条独立检索链
+  缺点：需要 ≥2 个实体，且每个实体要搜一次
+
+方案 B：先 retrieve 再分拆文档对比
+  一次 hybrid_search → rerank → 把搜索结果按与实体 A/B 的相关性分两组
+  → 每组 extract → compare(extract_A, extract_B)
+  优点：只用一次搜索，节省一次 LLM 调用
+  缺点：文档分拆逻辑复杂，可能分不干净
+
+方案 C：暂时注释掉 extract+compare 组合，标记为待定
+  从 TEMPLATES 里移除此组合，等你想清楚方案再加回来
+  优点：不产生错误结果
+  缺点：少了一个合法组合，更多请求走 LLM 分解
+
+
+5. tools/registry.py 没人用
+───────────────────────────
+问题：tools/registry.py 定义了一个通用注册框架（register + get_descriptions
+方法），但实际使用的是 graph_executor.py 里 Dict[str, Callable] 的实现。
+tools/registry.py 成为死代码。
+
+方案 A：删除 tools/registry.py
+  既然没人用，删了干净
+  优点：少维护一个文件
+  缺点：无
+
+方案 B：把 graph_executor.py 的 ToolRegistry 改为继承或使用 registry.py
+  graph_executor.py 的 ToolRegistry 内部调用 registry.py 的注册逻辑
+  优点：代码复用
+  缺点：多一层无意义的封装
+
+方案 C：将 tools/registry.py 改为工具描述文档生成器
+  利用它提供 get_descriptions() 给 GraphGenerator 生成 prompt（但
+  GraphGenerator 已经不走 LLM 了，用不到）
+  优点：如果未来 LLM 规划功能回归，可以用上
+  缺点：当前场景无用
+
+
+6. 测试文件过时
+───────────────
+问题：tests/ 下的 7 个测试文件都是基于旧架构写的：
+- route() 之前返回 dict 但测试可能假设了旧接口
+- generate() 之前返回 TaskGraph 现在返回 List[TaskGraph]
+- executor 的接口也变了
+大概率跑不通。
+
+方案 A：全部重写
+  用 pytest 重写核心流程测试：
+  - test_route_known_combos: 已知意图组合能正确返回
+  - test_route_chitchat: 闲聊拦截正常
+  - test_route_empty_query: 空查询不崩
+  - test_route_llm_trigger: LLM 兜底条件正确
+  - test_generate_known: 已知模板返回单图
+  - test_generate_undefined: 未定义组合返回多图（mock LLM）
+  - test_executor_dag: DAG 执行和占位符解析正确
+  优点：全面覆盖，回归有保障
+  缺点：工作量较大
+
+方案 B：先删掉过时的测试文件
+  在重写之前先把肯定跑不通的删掉，避免误导
+  优点：清掉技术债
+  缺点：一段时间的测试真空
+
+方案 C：只补测试工具函数的测试
+  优先保证 tools/ 目录下每个函数有基本测试
+  rerank、compare、summarize 等函数的输入输出验证
+  路由层的测试排后
+  优点：核心逻辑先覆盖，见效快
+  缺点：不全面

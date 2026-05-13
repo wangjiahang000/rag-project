@@ -1,0 +1,16 @@
+{
+  "summary": {
+    "passed": 7,
+    "failed": 0,
+    "total": 7
+  },
+  "details": {
+    "single_intent": true,
+    "dual_intent": true,
+    "triple_intent": true,
+    "execution": true,
+    "undefined_combo": true,
+    "placeholder": true,
+    "error_handling": true
+  }
+}

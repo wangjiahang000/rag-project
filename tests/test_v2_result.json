@@ -1,0 +1,212 @@
+{
+  "summary": {
+    "passed": 17,
+    "failed": 0,
+    "total": 17
+  },
+  "cases": [
+    {
+      "scenario": "空查询",
+      "query": "",
+      "expected": [],
+      "result": [],
+      "source": "none",
+      "passed": true
+    },
+    {
+      "scenario": "纯空格",
+      "query": "   ",
+      "expected": [],
+      "result": [],
+      "source": "none",
+      "passed": true
+    },
+    {
+      "scenario": "闲聊-问候",
+      "query": "你好",
+      "expected": [
+        "chitchat"
+      ],
+      "result": [
+        "chitchat"
+      ],
+      "source": "llm",
+      "passed": true
+    },
+    {
+      "scenario": "闲聊-致谢",
+      "query": "谢谢",
+      "expected": [
+        "chitchat"
+      ],
+      "result": [
+        "chitchat"
+      ],
+      "source": "llm",
+      "passed": true
+    },
+    {
+      "scenario": "闲聊-你是谁",
+      "query": "你是谁",
+      "expected": [
+        "chitchat"
+      ],
+      "result": [
+        "chitchat"
+      ],
+      "source": "llm",
+      "passed": true
+    },
+    {
+      "scenario": "单意图-retrieve",
+      "query": "找几篇RAG相关的论文",
+      "expected": [
+        "retrieve"
+      ],
+      "result": [
+        "retrieve"
+      ],
+      "source": "llm",
+      "passed": true
+    },
+    {
+      "scenario": "单意图-retrieve2",
+      "query": "什么是Transformer",
+      "expected": [
+        "retrieve"
+      ],
+      "result": [
+        "retrieve"
+      ],
+      "source": "llm",
+      "passed": true
+    },
+    {
+      "scenario": "单意图-compare",
+      "query": "LoRA和QLoRA有什么不同",
+      "expected": [
+        "compare"
+      ],
+      "result": [
+        "compare"
+      ],
+      "source": "llm",
+      "passed": true
+    },
+    {
+      "scenario": "单意图-compare2",
+      "query": "对比一下RAG和微调",
+      "expected": [
+        "compare"
+      ],
+      "result": [
+        "compare"
+      ],
+      "source": "llm",
+      "passed": true
+    },
+    {
+      "scenario": "单意图-summarize",
+      "query": "总结一下RAG的最新进展",
+      "expected": [
+        "summarize"
+      ],
+      "result": [
+        "summarize"
+      ],
+      "source": "llm",
+      "passed": true
+    },
+    {
+      "scenario": "单意图-howto",
+      "query": "怎么用PyTorch训练一个模型",
+      "expected": [
+        "howto"
+      ],
+      "result": [
+        "howto"
+      ],
+      "source": "llm",
+      "passed": true
+    },
+    {
+      "scenario": "单意图-reason",
+      "query": "为什么大模型会出现幻觉",
+      "expected": [
+        "reason"
+      ],
+      "result": [
+        "reason"
+      ],
+      "source": "llm",
+      "passed": true
+    },
+    {
+      "scenario": "单意图-extract",
+      "query": "BERT模型的参数量是多少",
+      "expected": [
+        "extract"
+      ],
+      "result": [
+        "extract"
+      ],
+      "source": "llm",
+      "passed": true
+    },
+    {
+      "scenario": "双意图-retrieve+summarize",
+      "query": "搜索RAG相关的论文并总结",
+      "expected": [
+        "retrieve",
+        "summarize"
+      ],
+      "result": [
+        "retrieve",
+        "summarize"
+      ],
+      "source": "llm",
+      "passed": true
+    },
+    {
+      "scenario": "双意图-compare+reason",
+      "query": "对比RAG和微调，分析原因",
+      "expected": [
+        "compare",
+        "reason"
+      ],
+      "result": [
+        "compare",
+        "reason"
+      ],
+      "source": "llm",
+      "passed": true
+    },
+    {
+      "scenario": "双意图-extract+compare",
+      "query": "提取LoRA和QLoRA的参数对比",
+      "expected": [
+        "extract",
+        "compare"
+      ],
+      "result": [
+        "compare",
+        "extract"
+      ],
+      "source": "llm",
+      "passed": true
+    },
+    {
+      "scenario": "混合长查询",
+      "query": "对比一下Transformer和BERT的区别，并总结各自的优缺点",
+      "expected": [
+        "compare"
+      ],
+      "result": [
+        "compare",
+        "summarize"
+      ],
+      "source": "llm",
+      "passed": true
+    }
+  ]
+}

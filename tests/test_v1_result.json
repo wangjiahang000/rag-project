@@ -1,0 +1,155 @@
+{
+  "summary": {
+    "total": 12,
+    "sbert_correct": 10,
+    "weighted_correct": 10,
+    "improved": 0,
+    "regressed": 0
+  },
+  "cases": [
+    {
+      "label": "明确对比",
+      "query": "LoRA和QLoRA有什么区别",
+      "expected": "compare",
+      "sbert_top1": "compare",
+      "weighted_top1": "compare",
+      "sbert_correct": true,
+      "weighted_correct": true,
+      "signals": [
+        "compare"
+      ]
+    },
+    {
+      "label": "检索+介绍",
+      "query": "介绍一下Transformer的原理",
+      "expected": "retrieve",
+      "sbert_top1": "retrieve",
+      "weighted_top1": "retrieve",
+      "sbert_correct": true,
+      "weighted_correct": true,
+      "signals": [
+        "retrieve",
+        "reason"
+      ]
+    },
+    {
+      "label": "howto+实现",
+      "query": "怎么用PyTorch实现一个Transformer",
+      "expected": "howto",
+      "sbert_top1": "extract",
+      "weighted_top1": "extract",
+      "sbert_correct": false,
+      "weighted_correct": false,
+      "signals": [
+        "howto"
+      ]
+    },
+    {
+      "label": "extract+数值",
+      "query": "BERT模型的参数量是多少",
+      "expected": "extract",
+      "sbert_top1": "extract",
+      "weighted_top1": "extract",
+      "sbert_correct": true,
+      "weighted_correct": true,
+      "signals": [
+        "extract"
+      ]
+    },
+    {
+      "label": "reason+原因",
+      "query": "为什么ResNet比VGG效果好",
+      "expected": "reason",
+      "sbert_top1": "summarize",
+      "weighted_top1": "summarize",
+      "sbert_correct": false,
+      "weighted_correct": false,
+      "signals": [
+        "reason"
+      ]
+    },
+    {
+      "label": "summarize+归纳",
+      "query": "总结一下RAG的最新研究进展",
+      "expected": "summarize",
+      "sbert_top1": "summarize",
+      "weighted_top1": "summarize",
+      "sbert_correct": true,
+      "weighted_correct": true,
+      "signals": [
+        "summarize"
+      ]
+    },
+    {
+      "label": "混合意图",
+      "query": "对比一下RAG和微调的区别，并总结各自的优缺点",
+      "expected": "compare",
+      "sbert_top1": "compare",
+      "weighted_top1": "compare",
+      "sbert_correct": true,
+      "weighted_correct": true,
+      "signals": [
+        "compare",
+        "summarize"
+      ]
+    },
+    {
+      "label": "describe+检索",
+      "query": "什么是知识蒸馏",
+      "expected": "retrieve",
+      "sbert_top1": "retrieve",
+      "weighted_top1": "retrieve",
+      "sbert_correct": true,
+      "weighted_correct": true,
+      "signals": [
+        "retrieve"
+      ]
+    },
+    {
+      "label": "教程类",
+      "query": "如何配置LoRA微调环境",
+      "expected": "howto",
+      "sbert_top1": "howto",
+      "weighted_top1": "howto",
+      "sbert_correct": true,
+      "weighted_correct": true,
+      "signals": [
+        "howto"
+      ]
+    },
+    {
+      "label": "提取类",
+      "query": "从论文中提取训练集的准确率",
+      "expected": "extract",
+      "sbert_top1": "extract",
+      "weighted_top1": "extract",
+      "sbert_correct": true,
+      "weighted_correct": true,
+      "signals": [
+        "extract"
+      ]
+    },
+    {
+      "label": "原因类",
+      "query": "为什么大模型会出现幻觉",
+      "expected": "reason",
+      "sbert_top1": "reason",
+      "weighted_top1": "reason",
+      "sbert_correct": true,
+      "weighted_correct": true,
+      "signals": [
+        "reason"
+      ]
+    },
+    {
+      "label": "检索+介绍",
+      "query": "有没有关于多模态模型的最新论文",
+      "expected": "retrieve",
+      "sbert_top1": "retrieve",
+      "weighted_top1": "retrieve",
+      "sbert_correct": true,
+      "weighted_correct": true,
+      "signals": []
+    }
+  ]
+}
