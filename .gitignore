@@ -5,11 +5,27 @@ __pycache__
 *$py.class
 venv/
 env/
+.venv/
 .env
 
 # 向量数据库
 storage/
 chroma_db/
+
+# ChromaDB 持久化数据（自动生成）
+chroma_data/
+
+# 检查点（自动生成）
+checkpoints/
+
+# 下载的本地模型
+models/
+
+# Pickle 缓存文件
+*.pkl
+
+# PDF 论文源文件
+data/
 
 # 临时文件
 *.tmp
@@ -17,14 +33,18 @@ temp/
 papers/
 uploads/
 last/
+
+# 日志
+*.log
+
 # IDE
 .vscode/
 .idea/
 
-
+# 前端
+frontend/node_modules/
+frontend/dist/
 
 # 系统文件
 .DS_Store
 Thumbs.db
-
-

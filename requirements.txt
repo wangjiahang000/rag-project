@@ -26,3 +26,10 @@ requests==2.33.1
 torch==2.11.0
 transformers==4.36.0
 huggingface_hub==1.10.2
+sentencepiece==0.2.0
+
+# 评估
+rouge-score==0.1.2
+
+# 检索增强
+scikit-learn==1.6.1

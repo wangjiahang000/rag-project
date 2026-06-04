@@ -1,11 +1,16 @@
 import json
 import os
+import re
 import time
 import logging
 from typing import List, Optional
 from litellm import completion
 from content_core.types import TaskGraph, TaskNode
-from content_core.tools.process.compare import extract_entities as bert_extract_entities
+from content_core.tools.process.entity_extractor import (
+    extract_entities as tech_extract_entities,
+    extract_time_info,
+    format_time_query,
+)
 import content_core.config as cfg
 
 logger = logging.getLogger(__name__)
@@ -64,6 +69,13 @@ class GraphGenerator:
         entities = entities or []
         key = tuple(sorted(user_tasks))
 
+        # 提取时间约束并缓存在实例变量中，供后续搜索使用
+        time_entities = extract_time_info(query)
+        self._time_entities = time_entities
+        self._time_suffix = format_time_query(time_entities)
+        if time_entities:
+            logger.info("查询中包含时间约束: %s → '%s'", time_entities, self._time_suffix)
+
         method_name = self.TEMPLATES.get(key)
         if method_name:
             method = getattr(self, method_name)
@@ -120,7 +132,10 @@ class GraphGenerator:
                     api_base=os.getenv("DEEPSEEK_BASE_URL"),
                     timeout=cfg.LLM_TIMEOUT,
                 )
-                content = response.choices[0].message.content.strip()
+                content = response.choices[0].message.content
+                if not content:
+                    raise ValueError("LLM 返回了空白内容")
+                content = content.strip()
                 # 清理 Markdown 代码块标记
                 for prefix in ["```json\n", "```json", "```"]:
                     if content.startswith(prefix):
@@ -188,8 +203,10 @@ class GraphGenerator:
     def _simple_search(self, query: str, k: Optional[int] = None) -> List[TaskNode]:
         """hybrid_search → rerank"""
         k = k or self.DEFAULT_K
+        ts = getattr(self, '_time_suffix', '')
+        search_query = f"{query} {ts}".strip() if ts else query
         return [
-            TaskNode(id="1", op="hybrid_search", args={"query": query, "k": k}),
+            TaskNode(id="1", op="hybrid_search", args={"query": search_query, "k": k}),
             TaskNode(id="2", op="rerank", args={"docs": "{{1}}", "query": query}, depends_on=["1"]),
         ]
 
@@ -214,14 +231,66 @@ class GraphGenerator:
         )
         return nodes + [tool_node]
 
+    @staticmethod
+    def _is_person_name(word: str) -> bool:
+        """首字母大写纯字母 → 猜测为人名"""
+        return bool(re.match(r'^[A-Z][a-z]+$', word))
+
+    @staticmethod
+    def _get_extractor():
+        from content_core.tools.process.entity_extractor import get_extractor
+        return get_extractor()
+
+    def _extract_context(self, query: str, exclude: List[str]) -> str:
+        """提取 UNKNOWN 实体作为领域上下文，排除搜索词自身"""
+        ext = self._get_extractor()
+        entities = ext.extract(query)
+        exclude_lower = {x.lower() for x in exclude}
+        context = []
+        for e in entities:
+            if e["type"] not in ("TECH", "TIME") and e["text"].lower() not in exclude_lower:
+                context.append(e["text"])
+        return " ".join(context[:2])
+
+    def _search_query(self, entity: str, context: str = "") -> str:
+        """按实体类型构造搜索词"""
+        if entity.lower() in self._get_extractor().tech_dict:
+            suffix = f" {context}".rstrip()
+            return f"{entity}{suffix}"
+        if self._is_person_name(entity):
+            return f"{entity} 论文"
+        return entity
+
+    def _build_entity_node(self, node_id: str, entity: str, context: str, k: int) -> TaskNode:
+        """为单个实体构建搜索节点：人名优先走索引，否则 hybrid_search"""
+        if self._is_person_name(entity):
+            from data.metadata_index import person_search
+            time_entities = getattr(self, '_time_entities', [])
+            result = person_search(entity, time_entities)
+            if result is not None:
+                # 人名索引命中 → 根据时间约束做不同查找
+                logger.info("人名索引命中: %s", entity)
+                # 暂不实现具体逻辑，等人名索引就绪后按 time_relation 分支
+                # 例：
+                #   year_range  → 过滤 start_year~end_year 的论文
+                #   after_year  → 查找 year 之后的论文
+                #   before_year → 查找 year 之前的论文
+                #   recent_years→ 查找最近 years_back 年的论文
+
+        query = self._search_query(entity, context)
+        ts = getattr(self, '_time_suffix', '')
+        search_query = f"{query} {ts}".strip() if ts else query
+        return TaskNode(id=node_id, op="hybrid_search", args={"query": search_query, "k": k})
+
     def _compare_chain(self, query: str, entities: List[str], k: Optional[int] = None) -> List[TaskNode]:
         """hybrid_search ×2（按实体拆分） → rerank ×2 → compare"""
         k = k or self.DEFAULT_K
         e0 = entities[0] if len(entities) > 0 else ""
         e1 = entities[1] if len(entities) > 1 else ""
+        ctx = self._extract_context(query, entities)
         return [
-            TaskNode(id="1", op="hybrid_search", args={"query": f"{e0} {query}".strip(), "k": k}),
-            TaskNode(id="2", op="hybrid_search", args={"query": f"{e1} {query}".strip(), "k": k}),
+            self._build_entity_node("1", e0, ctx, k),
+            self._build_entity_node("2", e1, ctx, k),
             TaskNode(id="3", op="rerank", args={"docs": "{{1}}", "query": query}, depends_on=["1"]),
             TaskNode(id="4", op="rerank", args={"docs": "{{2}}", "query": query}, depends_on=["2"]),
             TaskNode(id="5", op="compare", args={"docs_a": "{{3}}", "docs_b": "{{4}}"}, depends_on=["3", "4"]),
@@ -237,7 +306,7 @@ class GraphGenerator:
         """确保至少有 2 个实体，不足时用 BERT 抽取"""
         if len(entities) >= 2:
             return entities
-        extracted = bert_extract_entities(query)
+        extracted = tech_extract_entities(query)
         if len(extracted) >= 2:
             logger.info("BERT 从查询中抽取到实体: %s", extracted[:4])
             return extracted
@@ -288,9 +357,10 @@ class GraphGenerator:
             return self._fallback(query)
         e0, e1 = entities[0], entities[1]
         k = self.DEFAULT_K
+        ctx = self._extract_context(query, entities)
         return [
-            TaskNode(id="1", op="hybrid_search", args={"query": e0, "k": k}),
-            TaskNode(id="2", op="hybrid_search", args={"query": e1, "k": k}),
+            self._build_entity_node("1", e0, ctx, k),
+            self._build_entity_node("2", e1, ctx, k),
             TaskNode(id="3", op="rerank", args={"docs": "{{1}}", "query": query}, depends_on=["1"]),
             TaskNode(id="4", op="rerank", args={"docs": "{{2}}", "query": query}, depends_on=["2"]),
             TaskNode(id="5", op="extract", args={"docs": "{{3}}", "target": e0}, depends_on=["3"]),

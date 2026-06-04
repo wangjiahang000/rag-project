@@ -1,0 +1,30 @@
+# 检索对比  # retrieve
+什么是 Transformer 中的自注意力机制
+介绍 BERT 模型的核心思想
+RAG 技术的最新研究进展
+知识蒸馏的基本原理和应用
+
+# 对比分析  # compare
+对比 BERT 和 GPT 的架构差异
+LoRA 和 QLoRA 有什么区别
+PyTorch 和 TensorFlow 哪个更适合做研究
+
+# 归纳总结  # summarize
+总结一下知识图谱的构建方法
+概括 RAG 系统的主要技术路线
+归纳大语言模型的评测方法
+
+# 实操步骤  # howto
+如何实现一个简单的 RAG 系统
+怎么配置 LoRA 微调环境
+部署 LLM 的具体步骤是什么
+
+# 原因分析  # reason
+为什么 Transformer 比 RNN 效果好
+导致模型过拟合的原因有哪些
+为什么需要位置编码
+
+# 信息抽取  # extract
+从论文中提取实验参数设置
+提取 BERT 模型的参数量
+从文本中找出准确率数据

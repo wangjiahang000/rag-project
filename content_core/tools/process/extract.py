@@ -24,7 +24,10 @@ def extract(docs: list, target: str = "") -> str:
                 api_base=os.getenv("DEEPSEEK_BASE_URL"),
                 timeout=cfg.LLM_TIMEOUT,
             )
-            return response.choices[0].message.content
+            content = response.choices[0].message.content
+            if not content:
+                raise ValueError("LLM 返回了空白内容")
+            return content
         except Exception as e:
             logger.warning("extract LLM 第 %d/%d 次失败: %s",
                            attempt + 1, cfg.LLM_RETRY_COUNT + 1, e)

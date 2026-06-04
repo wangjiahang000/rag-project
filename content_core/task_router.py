@@ -2,15 +2,11 @@
 import re
 import json
 import os
-import time
-import logging
 import numpy as np
-from typing import List, Dict, Optional
+from typing import List, Dict
 from litellm import completion
 from content_core.models.sbert_classifier import SBERTClassifier
 import content_core.config as cfg
-
-logger = logging.getLogger(__name__)
 
 
 class TaskRouter:
@@ -25,19 +21,6 @@ class TaskRouter:
         (r"找|检索|搜|搜索|查|查找|什么是|是什么|定义|介绍", "retrieve"),
         (r"怎么|如何|步骤|教程|配置|部署|实现|导出|转换", "howto"),
         (r"为什么|原因|导致|背后|原理|造成", "reason"),
-    ]
-
-    # ── 闲聊拦截 ────────────────────────
-    CHITCHAT_PATTERNS = [
-        r"你是谁",
-        r"你叫什么",
-        r"你是什么",
-        r"你是.{0,3}吗",
-        r"我是.{0,3}吗",
-        r"你好|嗨|hello|hi",
-        r"再见|拜拜|bye",
-        r"谢谢|多谢|感谢",
-        r"聊天|闲聊",
     ]
 
     def __init__(self):
@@ -58,7 +41,7 @@ class TaskRouter:
 
     # ── 闲聊检测 ────────────────────────
     def _is_chitchat(self, query: str) -> bool:
-        for p in self.CHITCHAT_PATTERNS:
+        for p in cfg.CHITCHAT_PATTERNS:
             if re.search(p, query):
                 return True
         return False
@@ -78,13 +61,29 @@ class TaskRouter:
                 result.append(t)
         return result
 
+    # ── 资源类型识别 ────────────────────
+    def _resource_hint(self, query: str) -> str:
+        for pattern, hint in cfg.RESOURCE_RULES:
+            if re.search(pattern, query):
+                return hint
+        return "doc"
+
+    # ── 简单实体抽取 ────────────────────
+    def _extract_entities(self, query: str) -> List[str]:
+        english = re.findall(r'\b[A-Z][a-zA-Z]+\b', query)
+        chinese = re.findall(r'(?:找|和|与|跟|对比|比较)\s*([\u4e00-\u9fa5]{2,3})', query)
+        stop_words = {'一下', '怎么', '什么', '这个', '那个', '为啥', '区别',
+                      '不一样', '对比下', '几篇', '一篇', '关于', '一些'}
+        chinese = [w for w in chinese if w not in stop_words]
+        return list(set(english + chinese))
+
     # ── 第二层：SBERT语义分数 ──────────
     def _sbert_match(self, query: str) -> Dict[str, float]:
         tasks, confs = self.sbert.classify(query)
         return dict(zip(tasks, confs))
 
     # ── 第三层：LLM兜底 ─────────────────
-    def _llm_fallback(self, query: str, rule_signals: list, sbert_scores: dict) -> Optional[List[str]]:
+    def _llm_fallback(self, query: str, rule_signals: list, sbert_scores: dict) -> List[str]:
         prompt = f"""你是学术文献检索意图分类专家。首先判断用户输入是否属于闲聊、问候、无意义调侃或与学术技术完全无关的内容。
 如果是，请直接返回：{{"tasks": ["chitchat"], "confidence": 1.0}}
 如果不是闲聊，则判断用户问题的真实意图，可多选
@@ -96,38 +95,27 @@ class TaskRouter:
 
 返回纯JSON：{{"tasks": ["xxx"], "confidence": 0.9}}"""
 
-        for attempt in range(1 + cfg.LLM_RETRY_COUNT):
-            try:
-                response = completion(
-                    model="deepseek/deepseek-chat",
-                    messages=[{"role": "user", "content": prompt}],
-                    temperature=0,
-                    api_key=os.getenv("DEEPSEEK_API_KEY"),
-                    api_base=os.getenv("DEEPSEEK_BASE_URL"),
-                    timeout=cfg.LLM_TIMEOUT,
-                )
-                content = response.choices[0].message.content
-                data = json.loads(content)
-                tasks = data.get("tasks", ["retrieve"])
-                if not isinstance(tasks, list):
-                    logger.warning("LLM 返回的 tasks 不是列表: %s", repr(tasks))
-                    tasks = ["retrieve"]
-                return tasks
-            except Exception as e:
-                logger.warning("LLM 兜底第 %d/%d 次失败: %s", attempt + 1, cfg.LLM_RETRY_COUNT + 1, e)
-                if attempt < cfg.LLM_RETRY_COUNT:
-                    time.sleep(cfg.LLM_RETRY_DELAY * (attempt + 1))
-        logger.error("LLM 兜底全部 %d 次尝试均失败", cfg.LLM_RETRY_COUNT + 1)
-        return None
+        response = completion(
+            model="deepseek/deepseek-chat",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0,
+            api_key=os.getenv("DEEPSEEK_API_KEY"),
+            api_base=os.getenv("DEEPSEEK_BASE_URL"),
+        )
+        content = response.choices[0].message.content
+        data = json.loads(content)
+        return data.get("tasks", ["retrieve"])
 
     # ── 主入口 ──────────────────────────
     def route(self, query: str) -> dict:
-        # 空查询拦截
-        if not query or not query.strip():
+        # 闲聊直接拦截
+        if self._is_chitchat(query):
             return {
-                "user_tasks": [],
+                "user_tasks": ["chitchat"],
+                "resource_hint": "none",
                 "complexity": "single_step",
-                "source": "none",
+                "entities": [],
+                "source": "rule",
             }
 
         # 1. 收集关键词信号（只作为信号，不直接决策）
@@ -137,11 +125,10 @@ class TaskRouter:
         sbert_scores = self._sbert_match(query)
 
         # 3. 自适应幂次缩放（在原始区间内拉大差距）
-        scaled_scores = self._adaptive_power_scale(sbert_scores, power=cfg.POWER_SCALE)
+        scaled_scores = self._adaptive_power_scale(sbert_scores, power=2.0)
 
         # 4. 融合决策（关键词平滑提权）
         merged = {}
-        # 先以缩放后的 SBERT 分数为基础
         for intent, score in scaled_scores.items():
             merged[intent] = score
 
@@ -151,9 +138,7 @@ class TaskRouter:
                 t = min((sbert_score - cfg.BOOST_RANGE[0]) / (cfg.BOOST_RANGE[1] - cfg.BOOST_RANGE[0]), 1.0)
                 boosted = cfg.BOOST_TARGET[0] + (cfg.BOOST_TARGET[1] - cfg.BOOST_TARGET[0]) * t
                 merged[intent] = max(merged.get(intent, 0), boosted)
-            # 如果 SBERT 分数极低（≤0.27），则不采用关键词，防止误判
 
-        # 按综合分数排序，取高于阈值的意图，最多3个
         sorted_pairs = sorted(merged.items(), key=lambda x: x[1], reverse=True)
         tasks = [t for t, s in sorted_pairs if s >= cfg.SCORE_THRESHOLDS.get(t, 0.35)][:3]
         # 使用原始 SBERT 最高分判断置信度（幂次缩放后 top 恒为 ~1.0）
@@ -169,7 +154,7 @@ class TaskRouter:
                 tasks.remove("howto")
                 # 如果移除后列表为空，补回一个最高分的
                 if not tasks:
-                    tasks = [t for t, s in sorted_pairs if s >= cfg.SCORE_THRESHOLDS.get(t, 0.35) and t != "howto"][:1]
+                    tasks = [t for t, s in sorted_pairs if s >= thresholds.get(t, 0.35) and t != "howto"][:1]
 
         # 规则2：如果 extract 和 retrieve 同时出现，且 extract 无关键词信号，且查询中无具体数值量词，则移除 extract
         if "extract" in tasks and "retrieve" in tasks and "extract" not in rule_signals:
@@ -178,7 +163,7 @@ class TaskRouter:
             if not re.search(quantity_keywords, query):
                 tasks.remove("extract")
                 if not tasks:
-                    tasks = [t for t, s in sorted_pairs if s >= cfg.SCORE_THRESHOLDS.get(t, 0.35) and t != "extract"][:1]
+                    tasks = [t for t, s in sorted_pairs if s >= thresholds.get(t, 0.35) and t != "extract"][:1]
 
         # 规则3：纯介绍类 query（"介绍一下transformer"）排除误触的 summarize
         # 但如果 query 本身含有归纳意图（综合/几篇/整体等），保留 summarize
@@ -200,15 +185,7 @@ class TaskRouter:
         tasks = final_tasks[:3]
 
         # 规则4：关键词匹配的意图优先于其语义混淆意图
-        # 当 query 触发了某意图的关键词，但该意图被无关键词匹配的混淆意图反超时，交换顺序
-        # 例："归纳一下知识图谱推理的主要方法" → summarize 有关键词，reason 无关键词但分数更高
-        # 例："为什么需要位置编码"         → reason 有关键词，howto 无关键词但分数更高
-        KEYWORD_PRIORITY = {
-            "summarize": ["reason"],  # 归纳不被原因反超
-            "reason": ["howto"],      # 原因不被步骤反超
-            "howto": ["extract"],     # 步骤不被提取反超
-        }
-        for intent, competitors in KEYWORD_PRIORITY.items():
+        for intent, competitors in cfg.KEYWORD_PRIORITY.items():
             if intent in rule_signals and intent in tasks:
                 for comp in competitors:
                     if comp in tasks and comp not in rule_signals:
@@ -227,7 +204,7 @@ class TaskRouter:
                     kept.append(t)  # 关键词意图不截断
                 else:
                     relative_margin = (top_score - merged[t]) / top_score
-                    if relative_margin <= cfg.RELATIVE_MARGIN:  # 差距不大时保留
+                    if relative_margin <= 0.05:  # 差距不大时保留
                         kept.append(t)
             tasks = kept[:3]
         
@@ -245,43 +222,27 @@ class TaskRouter:
         keyword_conflict = [s for s in rule_signals if s not in tasks]
 
         # 5. 如果最终无任务、最高置信度太低、或关键词矛盾，调用 LLM 兜底
-        llm_used = False
-        if not tasks or top_conf < cfg.LLM_FALLBACK_THRESHOLD or keyword_conflict:
-            llm_tasks = self._llm_fallback(query, rule_signals, sbert_scores)
-            if llm_tasks is not None:
-                tasks = llm_tasks
-                source = "llm"
-                llm_used = True
+        if not tasks or top_conf < 0.50 or keyword_conflict:
+            tasks = self._llm_fallback(query, rule_signals, sbert_scores)
+            source = "llm"
 
-        # Chitchat 检测（方案A）：无意图且触发闲聊词才判 chitchat
-        if not tasks and self._is_chitchat(query):
-            return {
-                "user_tasks": ["chitchat"],
-                "complexity": "single_step",
-                "source": "rule",
-            }
-
-        # 最终兜底
-        if not tasks:
-            tasks = ["retrieve"]
-
-        # 6. 约束映射：确保输出属于合法组合方案（LLM 路径跳过约束，信任 LLM 结果）
-        if not llm_used:
-            tasks_set = set(tasks)
-            if len(tasks) == 3 and tasks_set not in cfg.VALID_TRIPLE:
-                reduced = False
-                for valid in cfg.VALID_DUAL:
-                    if valid.issubset(tasks_set):
-                        tasks = [t for t in tasks if t in valid]
-                        reduced = True
-                        break
-                if not reduced:
-                    tasks = [tasks[0]]
-            elif len(tasks) == 2 and tasks_set not in cfg.VALID_DUAL:
+        # 6. 约束映射：确保输出属于合法组合方案
+        tasks_set = set(tasks)
+        if len(tasks) == 3 and tasks_set not in cfg.VALID_TRIPLE:
+            reduced = False
+            for valid in cfg.VALID_DUAL:
+                if valid.issubset(tasks_set):
+                    tasks = [t for t in tasks if t in valid]
+                    reduced = True
+                    break
+            if not reduced:
                 tasks = [tasks[0]]
+        elif len(tasks) == 2 and tasks_set not in [set(c) for c in cfg.VALID_DUAL]:
+            tasks = [tasks[0]]
 
         return {
             "user_tasks": tasks,
             "complexity": "multi_step" if len(tasks) > 1 else "single_step",
+            "entities": [],
             "source": source,
         }

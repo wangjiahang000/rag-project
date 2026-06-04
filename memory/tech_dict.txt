@@ -1,0 +1,454 @@
+Transformer 5
+BERT 5
+GPT 5
+ResNet 5
+VGG 5
+CNN 5
+RNN 5
+LSTM 5
+GAN 5
+ViT 5
+CLIP 5
+LoRA 5
+QLoRA 5
+Adapter 5
+T5 5
+BART 5
+RoBERTa 5
+XLNet 5
+ALBERT 5
+MobileNet 5
+EfficientNet 5
+YOLO 5
+Diffusion 5
+VAE 5
+MLP 5
+SVM 5
+XGBoost 5
+LightGBM 5
+CatBoost 5
+KNN 5
+PCA 5
+Fine-tuning 5
+Pre-training 5
+Transfer Learning 5
+Data Augmentation 5
+Regularization 5
+Dropout 5
+BatchNorm 5
+LayerNorm 5
+Gradient Descent 5
+SGD 5
+Adam 5
+AdamW 5
+LearningRate 5
+WeightDecay 5
+EarlyStopping 5
+CrossValidation 5
+Backpropagation 5
+MixedPrecision 5
+RAG 5
+Retrieval Augmented Generation 5
+Embedding 5
+Tokenizer 5
+SemanticSearch 5
+DenseRetrieval 5
+HybridSearch 5
+BM25 5
+TF-IDF 5
+VectorDatabase 5
+ChromaDB 5
+FAISS 5
+HNSW 5
+ANN 5
+NearestNeighbor 5
+CosineSimilarity 5
+DotProduct 5
+ReRank 5
+CrossEncoder 5
+BiEncoder 5
+SentenceTransformer 5
+BGE 5
+Accuracy 5
+Precision 5
+Recall 5
+F1Score 5
+ROC 5
+AUC 5
+Perplexity 5
+BLEU 5
+ROUGE 5
+Latency 5
+Throughput 5
+ParamCount 5
+ONNX 5
+INT8 5
+FP16 5
+FP32 5
+INT4 5
+Quantization 5
+Pruning 5
+Distillation 5
+ONNXRuntime 5
+Knowledge Distillation 5
+Multimodal 5
+Large Language Model 5
+LLM 5
+Foundation Model 5
+Prompt 5
+Prompt Engineering 5
+Chain of Thought 5
+CoT 5
+Retrieval Augmented Generation 5
+Graph Neural Network 5
+GNN 5
+Reinforcement Learning 5
+RLHF 5
+Supervised Fine-tuning 5
+SFT 5
+Instruction Tuning 5
+Parameter-Efficient 5
+PEFT 5
+Neural Network 5
+Deep Learning 5
+Machine Learning 5
+Natural Language Processing 5
+NLP 5
+Computer Vision 5
+CV 5
+Token 5
+Context Window 5
+Attention 5
+Self-Attention 5
+Multi-Head Attention 5
+Feed Forward 5
+Positional Encoding 5
+Layer Normalization 5
+Residual Connection 5
+Activation Function 5
+ReLU 5
+GELU 5
+Softmax 5
+Sigmoid 5
+Hyperparameter 5
+Batch Size 5
+Epoch 5
+Iteration 5
+Overfitting 5
+Underfitting 5
+Generalization 5
+Benchmark 5
+State of the Art 5
+SOTA 5
+Ablation 5
+Embedding Dimension 5
+Hidden Size 5
+Vocabulary 5
+Corpus 5
+Annotation 5
+Ground Truth 5
+Loss Function 5
+CrossEntropy 5
+Mean Squared Error 5
+MSE 5
+BLEU Score 5
+Chunk 5
+Document 5
+Paragraph 5
+Knowledge Graph 5
+Knowledge Base 5
+DBpedia 5
+WordNet 5
+GPT-3 5
+GPT-4 5
+ChatGPT 5
+Claude 5
+Gemini 5
+LLaMA 5
+Llama 3 5
+Mistral 5
+Mixtral 5
+Falcon 5
+DeepSeek 5
+Qwen 5
+Baichuan 5
+ChatGLM 5
+Stable Diffusion 5
+Midjourney 5
+Whisper 5
+Segment Anything 5
+SAM 5
+BLIP 5
+BLIP-2 5
+InstructBLIP 5
+MiniGPT-4 5
+LLaVA 5
+Autoregressive 5
+Causal LM 5
+Masked LM 5
+Next Token Prediction 5
+Contrastive Learning 5
+Self-Supervised 5
+Semi-Supervised 5
+Zero-Shot 5
+Few-Shot 5
+One-Shot 5
+In-Context Learning 5
+ICL 5
+Knowledge Base 5
+Named Entity 5
+NER 5
+Part-of-Speech 5
+POS 5
+Dependency Parsing 5
+Coreference 5
+Relation Extraction 5
+Text Classification 5
+Sentiment Analysis 5
+Machine Translation 5
+Text Summarization 5
+Question Answering 5
+QA 5
+Information Extraction 5
+IE 5
+Open Information Extraction 5
+OpenIE 5
+Event Extraction 5
+Temporal 5
+Spatial 5
+Word Embedding 5
+Word2Vec 5
+GloVe 5
+FastText 5
+ELMo 5
+Contextual Embedding 5
+Subword 5
+Byte Pair Encoding 5
+BPE 5
+WordPiece 5
+Unigram 5
+SentencePiece 5
+End-to-End 5
+Pipeline 5
+Cascade 5
+Ensemble 5
+Bagging 5
+Boosting 5
+Stacking 5
+K-Means 5
+DBSCAN 5
+Hierarchical Clustering 5
+Gaussian Mixture 5
+GMM 5
+Latent Variable 5
+Bayesian 5
+Monte Carlo 5
+Markov Chain 5
+MCMC 5
+Variational Inference 5
+VI 5
+Expectation Maximization 5
+EM 5
+Generative 5
+Discriminative 5
+Likelihood 5
+Prior 5
+Posterior 5
+Evidence 5
+Marginal 5
+Conditional 5
+Independence 5
+Causal 5
+Causality 5
+Counterfactual 5
+Causal Inference 5
+Treatment 5
+Confounder 5
+Mediator 5
+Collider 5
+Directed Acyclic Graph 5
+DAG 5
+Structural Causal Model 5
+SCM 5
+Do-calculus 5
+Instrumental Variable 5
+IV 5
+Propensity Score 5
+Matching 5
+Difference-in-Differences 5
+DiD 5
+Regression Discontinuity 5
+RD 5
+Synthetic Control 5
+Tensor 5
+Matrix 5
+Vector 5
+Scalar 5
+Optimizer 5
+Scheduler 5
+Warmup 5
+Decay 5
+Linear 5
+Cosine 5
+Polynomial 5
+Inverse Square Root 5
+Stable Diffusion 5
+LangChain 5
+LlamaIndex 5
+Haystack 5
+Gradio 5
+FastAPI 5
+PyTorch 5
+TensorFlow 5
+JAX 5
+PaddlePaddle 5
+scikit-learn 5
+HuggingFace 5
+Transformers 5
+Datasets 5
+Accelerate 5
+PEFT 5
+TRL 5
+bitsandbytes 5
+DeepSpeed 5
+Megatron 5
+ColossalAI 5
+FairScale 5
+Horovod 5
+Ray 5
+MLflow 5
+Weights Biases 5
+WandB 5
+TensorBoard 5
+Neptune 5
+Comet 5
+Optuna 5
+Hyperopt 5
+Grid Search 5
+Random Search 5
+Bayesian Optimization 5
+Evolutionary 5
+Genetic Algorithm 5
+SWAP 5
+Simulated Annealing 5
+Apple Silicon 5
+MPS 5
+CUDA 5
+cuDNN 5
+Tensor Cores 5
+A100 5
+V100 5
+H100 5
+RTX 5
+TPU 5
+GPU 5
+CPU 5
+NPU 5
+Memory 5
+VRAM 5
+RAM 5
+Disk 5
+SSD 5
+HDD 5
+Cluster 5
+Node 5
+Worker 5
+Master 5
+Coordinator 5
+Orchestrator 5
+Kubernetes 5
+Docker 5
+Container 5
+Pod 5
+Service 5
+Deployment 5
+Endpoint 5
+API 5
+REST 5
+gRPC 5
+GraphQL 5
+WebSocket 5
+HTTP 5
+JSON 5
+XML 5
+YAML 5
+TOML 5
+CSV 5
+Parquet 5
+Avro 5
+Protocol Buffers 5
+Protobuf 5
+Arrow 5
+Feather 5
+Pickle 5
+HDF5 5
+NumPy 5
+Pandas 5
+Scipy 5
+Matplotlib 5
+Seaborn 5
+Plotly 5
+Jupyter 5
+Notebook 5
+Colab 5
+Kaggle 5
+Papers With Code 5
+arXiv 5
+Semantic Scholar 5
+Google Scholar 5
+Cite 5
+Citation 5
+Reference 5
+Bibliography 5
+DOI 5
+ISBN 5
+ISSN 5
+PDF 5
+HTML 5
+Markdown 5
+LaTeX 5
+BibTeX 5
+Algorithm 5
+baseline 5
+state-of-the-art 5
+embedding 5
+tokenization 5
+lemmatization 5
+stemming 5
+stopwords 5
+n-gram 5
+TF 5
+IDF 5
+PageRank 5
+HITS 5
+Node2Vec 5
+TransE 5
+RotatE 5
+ComplEx 5
+DistMult 5
+ConvE 5
+RDF 5
+SPARQL 5
+OWL 5
+RDFS 5
+triple 5
+subject 5
+object 5
+predicate 5
+entity 5
+relation 5
+attribute 5
+property 5
+class 5
+instance 5
+ontology 5
+taxonomy 5
+folksonomy 5
+vocabulary 5
+thesaurus 5
+semantic 5
+heterogeneous 5
+homogeneous 5
+multilingual 5
+cross-lingual 5
+monolingual 5

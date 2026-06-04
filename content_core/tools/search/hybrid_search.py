@@ -11,4 +11,4 @@ def hybrid_search(query: str, k: int = 5) -> list:
     if not _vector_store:
         raise RuntimeError("VectorStore 未注入")
     results = _vector_store.hybrid_search(query, k=k)
-    return [doc for doc, _ in results]
+    return [r[0] for r in results]

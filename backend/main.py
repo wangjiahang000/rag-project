@@ -1,71 +1,97 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
+import os
+import time
+import logging
 
-from content_core.task_router import TaskRouter
-from content_core.graph_generator import GraphGenerator
-from content_core.graph_executor import ToolRegistry, GraphExecutor
-from content_core.data.vector_store import VectorStore
-from content_core.tools.search.hybrid_search import hybrid_search, set_vector_store
-from content_core.tools.process.rerank import rerank
-from content_core.tools.process.compare import compare
-from content_core.tools.process.summarize import summarize
-from content_core.tools.process.extract import extract
-from content_core.tools.process.reason import reason
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+from starlette.middleware.base import BaseHTTPMiddleware
 
-app = FastAPI()
+from backend.routers.chat import router as chat_router
+from backend.routers.health import router as health_router
+from backend.routers.profile import router as profile_router
 
-# ── 持久化向量存储 ──
-vector_store = VectorStore(chroma_path="./chroma_data")
-set_vector_store(vector_store)
+logger = logging.getLogger(__name__)
 
-# ── 注册工具 ──
-registry = ToolRegistry()
-registry.register("hybrid_search", hybrid_search)
-registry.register("rerank", rerank)
-registry.register("compare", compare)
-registry.register("summarize", summarize)
-registry.register("extract", extract)
-registry.register("reason", reason)
+app = FastAPI(title="MyRAG API", version="2.0")
 
-executor = GraphExecutor(registry)
-generator = GraphGenerator()
-router = TaskRouter()
+# 前后端分离：允许跨域
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-
-class Query(BaseModel):
-    question: str
+# ── 静态文件（前端） ──
+_frontend_dir = os.path.join(os.path.dirname(__file__), "..", "frontend", "dist")
+if os.path.isdir(_frontend_dir):
+    app.mount("/assets", StaticFiles(directory=os.path.join(_frontend_dir, "assets")), name="assets")
+    logger.info("前端静态资源已挂载: %s", _frontend_dir)
 
 
-class Response(BaseModel):
-    user_tasks: list
-    plan: list
-    answer: str
+# ── 监控中间件 ──
+
+class MetricsMiddleware(BaseHTTPMiddleware):
+    """请求延迟、状态码、路径分布打点"""
+
+    async def dispatch(self, request: Request, call_next):
+        from backend.metrics import metrics as m
+
+        start = time.time()
+        response = await call_next(request)
+        elapsed_ms = (time.time() - start) * 1000
+
+        path = request.url.path
+        method = request.method
+        status = response.status_code
+
+        m.inc("http_requests_total", {"method": method, "path": path, "status": str(status)})
+        m.record("http_request_duration_ms", elapsed_ms, {"path": path})
+
+        # 慢查询警告
+        if elapsed_ms > 3000:
+            logger.warning("[SLOW] %s %s → %d (%.0fms)", method, path, status, elapsed_ms)
+        elif elapsed_ms > 500:
+            logger.info("[METRIC] %s %s → %d (%.0fms)", method, path, status, elapsed_ms)
+
+        # 响应头带耗时
+        response.headers["X-Process-Time-Ms"] = str(int(elapsed_ms))
+        return response
 
 
-@app.get("/health")
-def health():
+app.add_middleware(MetricsMiddleware)
+
+app.include_router(health_router)
+app.include_router(chat_router)
+app.include_router(profile_router)
+
+
+# ── /metrics 端点 ──
+
+@app.get("/metrics")
+def get_metrics():
+    from backend.metrics import metrics as m
+    return m.snapshot()
+
+
+@app.post("/metrics/reset")
+def reset_metrics():
+    from backend.metrics import metrics as m
+    m.reset()
     return {"status": "ok"}
 
 
-@app.post("/chat", response_model=Response)
-def chat(query: Query):
-    result = router.route(query.question)
-    tasks = result["user_tasks"]
+# ── SPA 兜底路由（前端 history 路由支持） ──
+_index_path = os.path.join(_frontend_dir, "index.html") if os.path.isdir(_frontend_dir) else None
 
-    graphs = generator.generate(tasks, query.question)
-    answers = []
-    all_plan = []
-    for graph in graphs:
-        results = executor.execute(graph)
-        last_id = graph.nodes[-1].id
-        answers.append(str(results.get(last_id, "")))
-        all_plan.extend(
-            {"id": n.id, "op": n.op, "args": n.args} for n in graph.nodes
-        )
-    answer = "\n\n---\n\n".join(answers)
 
-    return Response(
-        user_tasks=tasks,
-        plan=all_plan,
-        answer=answer,
-    )
+@app.get("/{full_path:path}")
+async def serve_spa(full_path: str):
+    if _index_path and not full_path.startswith(("api/", "openapi", "docs", "redoc")):
+        return FileResponse(_index_path)
+    from fastapi.responses import JSONResponse
+    return JSONResponse({"detail": "Not Found"}, status_code=404)
+

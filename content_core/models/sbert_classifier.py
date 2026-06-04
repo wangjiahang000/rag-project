@@ -1,11 +1,15 @@
 # content_core/models/sbert_classifier.py
 import os
+import pickle
+import logging
 # 使用 HuggingFace 国内镜像加速下载
 os.environ.setdefault("HF_ENDPOINT", "https://hf-mirror.com")
 
 import numpy as np
 from sentence_transformers import SentenceTransformer
 from typing import List, Tuple, Dict
+
+logger = logging.getLogger(__name__)
 
 
 # ── ONNX INT8 推理引擎（替换 SentenceTransformer.encode 接口）──
@@ -229,9 +233,8 @@ class SBERTClassifier:
         use_onnx: bool = False,
     ):
         # 自动检测 ONNX INT8 模型（默认行为，显式 use_onnx=True/False 可覆盖）
-        onnx_path = os.path.join(
-            os.path.dirname(os.path.abspath(__file__)), "bge_base_zh_int8.onnx"
-        )
+        model_dir = os.path.dirname(os.path.abspath(__file__))
+        onnx_path = os.path.join(model_dir, "bge_base_zh_int8.onnx")
         _onnx_available = os.path.exists(onnx_path)
 
         if use_onnx or (not use_onnx and _onnx_available and model_name == "BAAI/bge-base-zh-v1.5"):
@@ -240,7 +243,6 @@ class SBERTClassifier:
                     f"ONNX 模型不存在: {onnx_path}\n"
                     f"请先运行 content_core/models/export_onnx.py 导出"
                 )
-            model_dir = os.path.dirname(os.path.abspath(__file__))
             self.model = _ONNXEncoder(onnx_path, model_dir)
             self.onnx_mode = True
         else:
@@ -248,24 +250,48 @@ class SBERTClassifier:
             self.onnx_mode = False
 
         self.threshold = threshold
-        self.anchor_embs = self._encode_anchors()
-        self.negative_embs = self._encode_negative()
+        self.anchor_embs = self._load_or_encode("anchor_embs.pkl", self.ANCHORS)
+        self.negative_embs = self._load_or_encode("negative_embs.pkl", self.NEGATIVE_ANCHORS)
 
-    # ── 编码 ────────────────────────────────
+    # ── 编码（带磁盘缓存）───────────────────
+
+    def _load_or_encode(self, cache_name: str, anchors: Dict[str, list]) -> Dict[str, np.ndarray]:
+        """从 pickle 加载预计算嵌入，不存在则计算并保存"""
+        model_dir = os.path.dirname(os.path.abspath(__file__))
+        cache_path = os.path.join(model_dir, cache_name)
+
+        if os.path.exists(cache_path):
+            try:
+                with open(cache_path, 'rb') as f:
+                    data = pickle.load(f)
+                # 验证 key 一致性
+                if set(data.keys()) == set(anchors.keys()):
+                    logger.info("从缓存加载 %s", cache_name)
+                    return data
+                logger.info("%s key 不匹配，重新计算", cache_name)
+            except Exception as e:
+                logger.warning("加载 %s 失败: %s，重新计算", cache_name, e)
+
+        # 计算并保存
+        result = {
+            intent: self.model.encode(anchor_list, convert_to_numpy=True)
+            for intent, anchor_list in anchors.items()
+        }
+        try:
+            with open(cache_path, 'wb') as f:
+                pickle.dump(result, f)
+            logger.info("锚点嵌入已持久化到 %s", cache_path)
+        except Exception as e:
+            logger.warning("保存 %s 失败: %s", cache_name, e)
+
+        return result
 
     def _encode_anchors(self) -> Dict[str, np.ndarray]:
-        """预计算所有意图的锚点向量矩阵 {intent: (N, D)}"""
-        return {
-            intent: self.model.encode(anchors, convert_to_numpy=True)
-            for intent, anchors in self.ANCHORS.items()
-        }
+        """保留旧接口，兼容外部调用"""
+        return self._load_or_encode("anchor_embs.pkl", self.ANCHORS)
 
     def _encode_negative(self) -> Dict[str, np.ndarray]:
-        """预计算负例锚点矩阵"""
-        return {
-            intent: self.model.encode(anchors, convert_to_numpy=True)
-            for intent, anchors in self.NEGATIVE_ANCHORS.items()
-        }
+        return self._load_or_encode("negative_embs.pkl", self.NEGATIVE_ANCHORS)
 
     # ── 单条分类 ────────────────────────────
 
